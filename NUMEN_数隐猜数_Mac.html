@@ -1,0 +1,5618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b09">
+  <meta name="generator" content="数隐 NUMEN · Mac 单文件分享版">
+  <!-- 单文件分享版：CSS、JavaScript 与图标均已内嵌，可离线双击运行。 -->
+  <meta name="description" content="数隐 NUMEN 是一款可自定义位数、重复规则与难度的逻辑猜数游戏。每次猜测只会得到数字命中与位置命中两条线索，直到你锁定全部位置。">
+  <title>数隐 NUMEN · 逻辑猜数实验室</title>
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTUiIGZpbGw9IiMwYjEwMGMiLz4KICA8cmVjdCB4PSIxMSIgeT0iMTEiIHdpZHRoPSI0MiIgaGVpZ2h0PSI0MiIgcng9IjEwIiBmaWxsPSJub25lIiBzdHJva2U9IiNkOWZmNTgiIHN0cm9rZS1vcGFjaXR5PSIuMzgiLz4KICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5IiBoZWlnaHQ9IjkiIHJ4PSIyIiBmaWxsPSIjZDlmZjU4Ii8+CiAgPHJlY3QgeD0iMzUiIHk9IjIwIiB3aWR0aD0iOSIgaGVpZ2h0PSI5IiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDlmZjU4IiBzdHJva2Utb3BhY2l0eT0iLjU1Ii8+CiAgPHJlY3QgeD0iMjAiIHk9IjM1IiB3aWR0aD0iOSIgaGVpZ2h0PSI5IiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDlmZjU4IiBzdHJva2Utb3BhY2l0eT0iLjU1Ii8+CiAgPHJlY3QgeD0iMzUiIHk9IjM1IiB3aWR0aD0iOSIgaGVpZ2h0PSI5IiByeD0iMiIgZmlsbD0iI2Q5ZmY1OCIgZmlsbC1vcGFjaXR5PSIuMTgiLz4KICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIyLjIiIGZpbGw9IiNkOWZmNTgiLz4KPC9zdmc+Cg==" type="image/svg+xml">
+  <style>
+/* ==========================================================================
+   数隐 NUMEN — visual system
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+  --bg: #080b09;
+  --bg-deep: #050806;
+  --surface: #0e1410;
+  --surface-raised: #121a13;
+  --surface-soft: #0b100c;
+  --line: rgba(235, 241, 224, 0.11);
+  --line-strong: rgba(235, 241, 224, 0.2);
+  --text: #f1f3e8;
+  --text-soft: #ced4c7;
+  --muted: #a2ab9d;
+  --muted-dim: #727c6f;
+  --acid: #d9ff58;
+  --acid-bright: #e7ff8d;
+  --acid-soft: rgba(217, 255, 88, 0.11);
+  --acid-faint: rgba(217, 255, 88, 0.05);
+  --amber: #ffad68;
+  --amber-soft: rgba(255, 173, 104, 0.11);
+  --danger: #ff8477;
+  --font-sans: "Inter", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", "Segoe UI", sans-serif;
+  --font-serif: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", Georgia, serif;
+  --font-mono: "Cascadia Mono", "Cascadia Code", "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+  --radius-xl: 30px;
+  --radius-lg: 22px;
+  --radius-md: 15px;
+  --radius-sm: 11px;
+  --shadow-card: 0 30px 90px rgba(0, 0, 0, 0.34);
+  --shell: 1260px;
+  --ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body::selection,
+body *::selection {
+  background: var(--acid);
+  color: #0a0f07;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 16px;
+  z-index: 1000;
+  transform: translateY(-160%);
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--acid);
+  color: #0b1007;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Backdrop
+   -------------------------------------------------------------------------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 48% -10%, rgba(65, 88, 47, 0.17), transparent 36%),
+    linear-gradient(180deg, #080b09 0%, #070a08 56%, #050806 100%);
+}
+
+.backdrop-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.backdrop-orb-a {
+  width: 44vw;
+  height: 44vw;
+  top: -22vw;
+  right: -8vw;
+  background: radial-gradient(circle, rgba(217, 255, 88, 0.09) 0%, transparent 68%);
+}
+
+.backdrop-orb-b {
+  width: 38vw;
+  height: 38vw;
+  left: -22vw;
+  bottom: -20vw;
+  background: radial-gradient(circle, rgba(117, 159, 99, 0.08) 0%, transparent 70%);
+}
+
+.backdrop-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  background-image:
+    linear-gradient(rgba(236, 243, 228, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 243, 228, 0.026) 1px, transparent 1px);
+  background-size: 76px 76px;
+  -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 8%, #000 20%, transparent 82%);
+  mask-image: radial-gradient(ellipse 72% 62% at 50% 8%, #000 20%, transparent 82%);
+}
+
+/* --------------------------------------------------------------------------
+   Shared elements
+   -------------------------------------------------------------------------- */
+
+.shell {
+  width: min(var(--shell), calc(100% - 96px));
+  margin: 0 auto;
+  flex: 1;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.eyebrow-line {
+  width: 28px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.status-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 0 4px rgba(217, 255, 88, 0.08);
+}
+
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(217, 255, 88, 0.24);
+  border-radius: 50%;
+  animation: softPulse 3s var(--ease) infinite;
+}
+
+.panel-index {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.text-button {
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 3px 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.text-button:hover {
+  color: var(--text);
+  border-bottom-color: var(--line-strong);
+}
+
+.text-button.centered {
+  align-self: center;
+  margin-top: 13px;
+}
+
+.primary-button,
+.secondary-button,
+.submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 56px;
+  border-radius: 14px;
+  padding: 0 14px 0 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-align: left;
+  transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), background 0.22s ease, border-color 0.22s ease;
+}
+
+.primary-button,
+.submit-button {
+  border: 1px solid var(--acid);
+  background: var(--acid);
+  color: #0b1007;
+  box-shadow: 0 8px 32px rgba(217, 255, 88, 0.08);
+}
+
+.primary-button:hover,
+.submit-button:hover {
+  transform: translateY(-2px);
+  background: var(--acid-bright);
+  border-color: var(--acid-bright);
+  box-shadow: 0 16px 36px rgba(217, 255, 88, 0.14);
+}
+
+.primary-button:active,
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.button-arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border: 1px solid rgba(10, 15, 7, 0.2);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.secondary-button {
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text);
+  justify-content: center;
+}
+
+.secondary-button:hover {
+  border-color: rgba(217, 255, 88, 0.45);
+  background: var(--acid-faint);
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 20px;
+  line-height: 1;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.icon-button:hover {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 20px;
+  border: 1px solid var(--line);
+  border-bottom-color: rgba(235, 241, 224, 0.2);
+  border-radius: 5px;
+  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Topbar
+   -------------------------------------------------------------------------- */
+
+.topbar {
+  width: min(var(--shell), calc(100% - 96px));
+  margin: 0 auto;
+  padding: 25px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-mark {
+  display: grid;
+  grid-template-columns: repeat(2, 7px);
+  grid-template-rows: repeat(2, 7px);
+  gap: 3px;
+  width: 26px;
+  height: 26px;
+  padding: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  transform: rotate(45deg);
+}
+
+.brand-mark i {
+  display: block;
+  border: 1px solid rgba(235, 241, 224, 0.28);
+  border-radius: 1px;
+}
+
+.brand-mark i:first-child {
+  border-color: var(--acid);
+  background: var(--acid);
+}
+
+.brand-mark i:last-child {
+  border-color: rgba(217, 255, 88, 0.35);
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-copy strong {
+  font-family: var(--font-serif);
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.brand-copy small {
+  margin-top: 4px;
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.local-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.local-pill i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 10px rgba(217, 255, 88, 0.55);
+}
+
+/* --------------------------------------------------------------------------
+   Setup hero
+   -------------------------------------------------------------------------- */
+
+.view {
+  animation: viewIn 0.7s var(--ease) both;
+}
+
+.setup-view {
+  padding-top: clamp(18px, 4.4vh, 54px);
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(430px, 0.82fr);
+  align-items: start;
+  gap: clamp(42px, 7vw, 104px);
+}
+
+.hero {
+  position: relative;
+  padding-top: 19px;
+}
+
+.hero h1 {
+  max-width: 740px;
+  margin-top: 24px;
+  font-family: var(--font-serif);
+  font-size: clamp(3.25rem, 5.7vw, 5.7rem);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+}
+
+.hero h1 span {
+  display: block;
+}
+
+.hero h1 em {
+  position: relative;
+  color: var(--acid);
+  font-style: normal;
+}
+
+.hero h1 em::after {
+  content: "";
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  bottom: 0.08em;
+  height: 2px;
+  background: linear-gradient(90deg, var(--acid), rgba(217, 255, 88, 0.05));
+  transform: rotate(-1deg);
+  opacity: 0.7;
+}
+
+.hero-lede {
+  max-width: 555px;
+  margin-top: 27px;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.85;
+}
+
+.hero-lede strong {
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.preview-wrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 555px;
+  margin-top: 38px;
+}
+
+.secret-preview {
+  position: relative;
+  grid-column: 1 / -1;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(217, 255, 88, 0.045), transparent 58%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 54%),
+    rgba(12, 18, 13, 0.72);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
+}
+
+.preview-head,
+.preview-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(178, 189, 174, 0.72);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.11em;
+  line-height: 1.4;
+}
+
+.preview-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(217, 255, 88, 0.62);
+  white-space: nowrap;
+}
+
+.preview-status i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--acid);
+}
+
+.preview-digits {
+  display: grid;
+  grid-template-columns: repeat(var(--preview-length, 4), minmax(0, 1fr));
+  gap: 9px;
+  margin: 17px 0;
+}
+
+.preview-digit {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.12;
+  min-width: 0;
+  border: 1px solid rgba(235, 241, 224, 0.14);
+  border-radius: 11px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent),
+    rgba(5, 9, 6, 0.65);
+  color: rgba(235, 241, 224, 0.38);
+  font-family: var(--font-mono);
+  font-size: clamp(1.65rem, 2.6vw, 2.2rem);
+  line-height: 1;
+  text-shadow: 0 0 24px rgba(235, 241, 224, 0.12);
+  animation: previewPop 0.55s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+.preview-digit:nth-child(2n) {
+  color: rgba(217, 255, 88, 0.48);
+  border-color: rgba(217, 255, 88, 0.16);
+  text-shadow: 0 0 24px rgba(217, 255, 88, 0.11);
+}
+
+.preview-foot {
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: rgba(152, 162, 148, 0.55);
+}
+
+.scan-line {
+  position: absolute;
+  z-index: 1;
+  left: -10%;
+  right: -10%;
+  top: 48%;
+  height: 52px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(217, 255, 88, 0.045), transparent);
+  border-top: 1px solid rgba(217, 255, 88, 0.1);
+  animation: scanSweep 7s ease-in-out 1.6s infinite;
+}
+
+.floating-clue {
+  position: static;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: rgba(15, 22, 16, 0.72);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+}
+
+.floating-clue span {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.floating-clue strong {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.floating-clue-digits {
+  border-color: rgba(217, 255, 88, 0.24);
+}
+
+.floating-clue-digits strong {
+  color: var(--acid);
+}
+
+.floating-clue-positions {
+  border-color: rgba(255, 173, 104, 0.22);
+}
+
+.floating-clue-positions strong {
+  color: var(--amber);
+}
+
+.hero-metrics {
+  display: flex;
+  align-items: stretch;
+  max-width: 555px;
+  margin-top: 28px;
+  padding-top: 19px;
+  border-top: 1px solid var(--line);
+}
+
+.hero-metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-right: 18px;
+}
+
+.hero-metric + .hero-metric {
+  border-left: 1px solid var(--line);
+  padding-left: 20px;
+}
+
+.metric-value {
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.metric-label {
+  color: var(--muted-dim);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+
+/* --------------------------------------------------------------------------
+   Setup form
+   -------------------------------------------------------------------------- */
+
+.setup-card {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: clamp(23px, 2.8vw, 34px);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.038), transparent 34%),
+    linear-gradient(180deg, rgba(17, 25, 18, 0.94), rgba(10, 15, 11, 0.97));
+  box-shadow: var(--shadow-card);
+  animation: cardIn 0.85s 0.1s var(--ease) both;
+}
+
+.setup-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 11%;
+  right: 11%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(217, 255, 88, 0.55), transparent);
+}
+
+.setup-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.setup-card h2 {
+  margin-top: 8px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 2.5vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.setup-stamp {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.setup-intro {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.field {
+  min-width: 0;
+  margin: 24px 0 0;
+  border: 0;
+  padding: 0;
+}
+
+.field-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 0;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.field-title span {
+  margin-left: auto;
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+.field-help {
+  margin-top: 4px;
+  color: var(--muted-dim);
+  font-size: 10.5px;
+  line-height: 1.6;
+}
+
+.length-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 11px;
+}
+
+.length-option {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.length-option input,
+.mode-option input,
+.difficulty-option input,
+.exact-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.length-option > span {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 3px;
+  height: 53px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.018);
+  color: var(--muted);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.length-option strong {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.length-option small {
+  font-size: 9px;
+}
+
+.length-option > span:hover {
+  border-color: var(--line-strong);
+  color: var(--text-soft);
+}
+
+.length-option input:checked + span {
+  border-color: rgba(217, 255, 88, 0.62);
+  background: var(--acid-soft);
+  color: var(--acid);
+}
+
+.length-option input:focus-visible + span {
+  outline: 2px solid var(--acid);
+  outline-offset: 3px;
+}
+
+.mode-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 11px;
+}
+
+.mode-option {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.mode-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  min-height: 65px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 10px;
+  background: rgba(255, 255, 255, 0.018);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.mode-body strong {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.mode-body small {
+  color: var(--muted-dim);
+  font-size: 9px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.mode-option:hover .mode-body {
+  border-color: var(--line-strong);
+}
+
+.mode-option input:checked + .mode-body {
+  border-color: rgba(217, 255, 88, 0.52);
+  background: var(--acid-soft);
+}
+
+.mode-option input:checked + .mode-body strong {
+  color: var(--acid);
+}
+
+.mode-option input:checked + .mode-body small {
+  color: rgba(217, 255, 88, 0.6);
+}
+
+.mode-option input:focus-visible + .mode-body,
+.difficulty-option input:focus-visible + .difficulty-body,
+.exact-option input:focus-visible + span {
+  outline: 2px solid var(--acid);
+  outline-offset: 3px;
+}
+
+.exact-panel {
+  margin-top: 10px;
+  border: 1px dashed rgba(235, 241, 224, 0.13);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px 12px;
+  background: rgba(5, 9, 6, 0.24);
+  animation: subFieldIn 0.35s var(--ease) both;
+}
+
+.exact-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.exact-head > span {
+  color: var(--text-soft);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.exact-head > small {
+  color: var(--muted-dim);
+  font-size: 8.5px;
+}
+
+.exact-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.exact-option {
+  position: relative;
+  cursor: pointer;
+}
+
+.exact-option > span {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  min-width: 44px;
+  height: 31px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.exact-option small {
+  font-size: 8px;
+}
+
+.exact-option > span:hover {
+  border-color: var(--line-strong);
+}
+
+.exact-option input:checked + span {
+  border-color: rgba(217, 255, 88, 0.56);
+  background: var(--acid-soft);
+  color: var(--acid);
+}
+
+.exact-help {
+  margin-top: 8px;
+  font-size: 9.5px;
+  line-height: 1.55;
+}
+
+.difficulty-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.difficulty-option {
+  position: relative;
+  cursor: pointer;
+}
+
+.difficulty-body {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 8px 11px;
+  background: rgba(255, 255, 255, 0.018);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.difficulty-option:hover .difficulty-body {
+  border-color: var(--line-strong);
+}
+
+.difficulty-option input:checked + .difficulty-body {
+  border-color: rgba(217, 255, 88, 0.48);
+  background: var(--acid-soft);
+}
+
+.signal-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 23px;
+  height: 17px;
+}
+
+.signal-bars i {
+  display: block;
+  width: 5px;
+  border-radius: 1px;
+  background: rgba(235, 241, 224, 0.16);
+}
+
+.signal-bars i:nth-child(1) {
+  height: 7px;
+}
+
+.signal-bars i:nth-child(2) {
+  height: 11px;
+}
+
+.signal-bars i:nth-child(3) {
+  height: 16px;
+}
+
+.signal-1 i:nth-child(1),
+.signal-2 i:nth-child(1),
+.signal-2 i:nth-child(2),
+.signal-3 i {
+  background: rgba(217, 255, 88, 0.68);
+}
+
+.signal-1 i:nth-child(n + 2),
+.signal-2 i:nth-child(3) {
+  background: rgba(235, 241, 224, 0.12);
+}
+
+.difficulty-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.difficulty-copy strong {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.difficulty-copy small {
+  overflow: hidden;
+  color: var(--muted-dim);
+  font-size: 9px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.difficulty-option input:checked + .difficulty-body .difficulty-copy strong {
+  color: var(--acid);
+}
+
+.difficulty-option input:checked + .difficulty-body .difficulty-copy small {
+  color: rgba(217, 255, 88, 0.55);
+}
+
+.range-code {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 3px 6px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.difficulty-option input:checked + .difficulty-body .range-code {
+  border-color: rgba(217, 255, 88, 0.2);
+  color: var(--acid);
+}
+
+.setup-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+}
+
+.summary-count {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: 1px;
+}
+
+.summary-count span {
+  color: var(--muted-dim);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.summary-count strong {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.summary-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.setup-submit {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.privacy-note {
+  margin-top: 10px;
+  color: var(--muted-dim);
+  font-size: 8.5px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Briefing
+   -------------------------------------------------------------------------- */
+
+.briefing {
+  display: grid;
+  grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
+  gap: 30px clamp(36px, 5vw, 72px);
+  margin-top: clamp(78px, 10vw, 128px);
+  border-top: 1px solid var(--line);
+  padding-top: 38px;
+}
+
+.briefing-heading {
+  grid-row: 1 / span 2;
+}
+
+.briefing-heading h2 {
+  margin-top: 18px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.22;
+}
+
+.briefing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.briefing-card {
+  border-top: 1px solid var(--line-strong);
+  padding-top: 14px;
+}
+
+.briefing-number {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.briefing-card h3 {
+  margin-top: 10px;
+  color: var(--text-soft);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.briefing-card p {
+  margin-top: 7px;
+  color: var(--muted-dim);
+  font-size: 11.5px;
+  line-height: 1.75;
+}
+
+.example-strip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 17px 22px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.example-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 24px;
+  border-right: 1px solid var(--line);
+}
+
+.example-label span {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.1em;
+}
+
+.example-label strong {
+  color: var(--text-soft);
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.example-guess {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.example-caption {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.example-digits {
+  display: flex;
+  gap: 4px;
+}
+
+.example-digits span {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: rgba(5, 9, 6, 0.4);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.example-hints {
+  display: flex;
+  gap: 6px;
+}
+
+.example-hint {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 8.5px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.example-hint strong {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.example-hint-digits {
+  border-color: rgba(217, 255, 88, 0.18);
+  background: var(--acid-faint);
+  color: rgba(217, 255, 88, 0.74);
+}
+
+.example-hint-digits strong {
+  color: var(--acid);
+}
+
+.example-hint-positions {
+  border-color: rgba(255, 173, 104, 0.18);
+  background: rgba(255, 173, 104, 0.05);
+  color: rgba(255, 173, 104, 0.78);
+}
+
+.example-hint-positions strong {
+  color: var(--amber);
+}
+
+.example-strip > p {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 11px;
+  color: var(--muted-dim);
+  font-size: 9.5px;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Game heading
+   -------------------------------------------------------------------------- */
+
+.game-view {
+  padding-top: 17px;
+}
+
+.game-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 34px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 28px;
+}
+
+.game-heading h1 {
+  margin-top: 13px;
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 4.8vw, 4.35rem);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
+}
+
+.title-period {
+  color: var(--acid);
+}
+
+.game-lede {
+  max-width: 570px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+
+.game-spec {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 18px 24px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 13px 16px;
+  background: rgba(255, 255, 255, 0.019);
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.spec-item > span {
+  color: var(--muted-dim);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+}
+
+.spec-item > strong {
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.game-spec .text-button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  color: var(--muted-dim);
+  font-size: 10px;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(400px, 0.92fr);
+  align-items: start;
+  gap: 22px;
+  margin-top: 24px;
+}
+
+.guess-panel,
+.history-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.025), transparent 32%),
+    rgba(12, 18, 13, 0.82);
+}
+
+.guess-panel {
+  padding: clamp(22px, 2.6vw, 32px);
+}
+
+.guess-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 15px;
+}
+
+.round-counter {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.round-counter b {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#guessActive > h2,
+.finish-panel > h2 {
+  margin-top: 24px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 2.7vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+
+.panel-copy {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.7;
+}
+
+.constraint-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.constraint-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 7px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.constraint-chip::before {
+  content: "";
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(217, 255, 88, 0.55);
+}
+
+.guess-field {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.slot-row {
+  display: grid;
+  grid-template-columns: repeat(var(--digits, 4), minmax(0, 1fr));
+  gap: 9px;
+  flex: 1 1 auto;
+  max-width: 470px;
+  min-width: 0;
+}
+
+.slot {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 0.9;
+  border: 1px solid var(--line-strong);
+  border-radius: 13px;
+  padding: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    rgba(5, 9, 6, 0.58);
+  color: var(--acid);
+  caret-color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: clamp(1.7rem, 3.5vw, 2.45rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.slot::placeholder {
+  color: rgba(235, 241, 224, 0.17);
+  opacity: 1;
+}
+
+.slot:hover {
+  border-color: rgba(235, 241, 224, 0.31);
+}
+
+.slot:focus {
+  outline: none;
+  border-color: var(--acid);
+  background: rgba(217, 255, 88, 0.06);
+  box-shadow: 0 0 0 3px rgba(217, 255, 88, 0.09), 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.slot:not(:placeholder-shown) {
+  background:
+    linear-gradient(180deg, rgba(217, 255, 88, 0.05), transparent),
+    rgba(6, 10, 7, 0.7);
+}
+
+.slot-row.is-invalid .slot {
+  border-color: rgba(255, 132, 119, 0.55);
+  animation: slotShake 0.36s ease;
+}
+
+.clear-button {
+  align-self: flex-end;
+  flex: 0 0 auto;
+  min-height: 39px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 9px;
+  background: transparent;
+  color: var(--muted-dim);
+  font-size: 10px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.clear-button:hover {
+  border-color: var(--line);
+  color: var(--text-soft);
+}
+
+.guess-form-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 20px;
+  margin-top: 9px;
+}
+
+.field-hint {
+  color: var(--muted-dim);
+  font-size: 9.5px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.validation-message {
+  color: var(--danger);
+  font-size: 10.5px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 13px;
+  min-height: 54px;
+}
+
+.submit-key {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 26px;
+  border: 1px solid rgba(10, 15, 7, 0.22);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.04em;
+}
+
+.latest-feedback {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--acid);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.022);
+  animation: latestIn 0.35s var(--ease) both;
+}
+
+.latest-topline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.latest-topline strong {
+  color: var(--text-soft);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.latest-topline span {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+}
+
+.latest-hints {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 7px;
+}
+
+.latest-hint {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.latest-hint strong {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.latest-hint-digits strong {
+  color: var(--acid);
+}
+
+.latest-hint-positions strong {
+  color: var(--amber);
+}
+
+.latest-copy {
+  margin-top: 4px;
+  color: var(--muted-dim);
+  font-size: 9.5px;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Finished game panel
+   -------------------------------------------------------------------------- */
+
+.finish-panel {
+  margin-top: 24px;
+}
+
+.finish-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+}
+
+.finish-kicker span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--acid);
+}
+
+.finish-panel > h2 {
+  margin-top: 12px;
+}
+
+.finish-copy {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.finish-copy strong {
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.finish-secret {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.finish-secret span {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 65px;
+  border: 1px solid rgba(217, 255, 88, 0.44);
+  border-radius: 11px;
+  background: var(--acid-soft);
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.finish-scoreline {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.finish-scoreline strong {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.mini-grade {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  margin-left: 3px;
+  border: 1px solid rgba(217, 255, 88, 0.38);
+  border-radius: 50%;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.finish-actions {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.finish-actions .primary-button {
+  min-height: 52px;
+}
+
+.finish-actions .secondary-button {
+  min-height: 52px;
+  padding: 0 12px;
+}
+
+.guess-footnote {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+  color: var(--muted-dim);
+  font-size: 8.5px;
+}
+
+.guess-footnote > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+.legend-digits {
+  background: var(--acid);
+}
+
+.legend-positions {
+  background: var(--amber);
+}
+
+.footnote-note {
+  margin-left: auto;
+  color: rgba(152, 162, 148, 0.55);
+}
+
+/* --------------------------------------------------------------------------
+   History
+   -------------------------------------------------------------------------- */
+
+.history-panel {
+  position: sticky;
+  top: 20px;
+  scroll-margin-top: 16px;
+  padding: clamp(20px, 2.3vw, 28px);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.034), transparent 38%),
+    rgba(9, 14, 10, 0.9);
+}
+
+.history-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 15px;
+}
+
+.history-head h2 {
+  margin-top: 5px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 2vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.history-count {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: var(--muted-dim);
+  font-size: 9px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.history-count b {
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.history-note {
+  margin-top: 10px;
+  color: var(--muted-dim);
+  font-size: 9.5px;
+  line-height: 1.6;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  max-height: min(560px, calc(100vh - 335px));
+  min-height: 236px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top: 14px;
+  padding-right: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(235, 241, 224, 0.18) transparent;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  border-radius: 9px;
+  background: rgba(235, 241, 224, 0.16);
+}
+
+.history-empty {
+  display: flex;
+  min-height: 226px;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(235, 241, 224, 0.13);
+  border-radius: var(--radius-md);
+  padding: 26px;
+  text-align: center;
+}
+
+.empty-target {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 20px;
+}
+
+.empty-target::before,
+.empty-target::after {
+  content: "";
+  position: absolute;
+  background: var(--line);
+}
+
+.empty-target::before {
+  top: 50%;
+  left: -16px;
+  right: -16px;
+  height: 1px;
+}
+
+.empty-target::after {
+  top: -16px;
+  bottom: -16px;
+  left: 50%;
+  width: 1px;
+}
+
+.history-empty p {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.history-empty > span {
+  margin-top: 3px;
+  color: var(--muted-dim);
+  font-size: 9.5px;
+}
+
+.history-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 33px minmax(0, 1fr);
+  gap: 10px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 11px 12px;
+  background: rgba(255, 255, 255, 0.021);
+  animation: rowIn 0.4s var(--ease) both;
+}
+
+.history-row.is-latest {
+  border-color: rgba(217, 255, 88, 0.22);
+  background:
+    linear-gradient(110deg, rgba(217, 255, 88, 0.06), transparent 68%),
+    rgba(255, 255, 255, 0.027);
+  box-shadow: inset 2px 0 0 var(--acid);
+}
+
+.history-row.is-win {
+  border-color: rgba(217, 255, 88, 0.4);
+  background:
+    linear-gradient(110deg, rgba(217, 255, 88, 0.1), transparent 70%),
+    rgba(255, 255, 255, 0.026);
+}
+
+.history-turn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding-top: 1px;
+}
+
+.history-turn span {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.03em;
+}
+
+.history-turn strong {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.history-row.is-latest .history-turn strong {
+  color: var(--acid);
+}
+
+.history-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.history-guess {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cell-label {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+}
+
+.guess-number {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.guess-chip {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 28px;
+  border: 1px solid rgba(235, 241, 224, 0.16);
+  border-radius: 4px;
+  background: rgba(4, 8, 5, 0.38);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.history-row.is-latest .guess-chip {
+  border-color: rgba(217, 255, 88, 0.2);
+  color: var(--text);
+}
+
+.history-row.is-win .guess-chip {
+  border-color: rgba(217, 255, 88, 0.48);
+  background: rgba(217, 255, 88, 0.09);
+  color: var(--acid);
+}
+
+.history-hints {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 5px;
+}
+
+.hint-block {
+  display: flex;
+  min-width: 56px;
+  flex-direction: column;
+  gap: 1px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 5px 7px;
+}
+
+.hint-block .hint-label {
+  font-size: 7.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.hint-block .hint-value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.hint-digits {
+  border-color: rgba(217, 255, 88, 0.17);
+  background: var(--acid-faint);
+}
+
+.hint-digits .hint-label {
+  color: rgba(217, 255, 88, 0.55);
+}
+
+.hint-digits .hint-value {
+  color: var(--acid);
+}
+
+.hint-positions {
+  border-color: rgba(255, 173, 104, 0.17);
+  background: rgba(255, 173, 104, 0.045);
+}
+
+.hint-positions .hint-label {
+  color: rgba(255, 173, 104, 0.58);
+}
+
+.hint-positions .hint-value {
+  color: var(--amber);
+}
+
+.history-win-tag {
+  position: absolute;
+  top: -1px;
+  right: 10px;
+  border-radius: 0 0 5px 5px;
+  padding: 2px 6px;
+  background: var(--acid);
+  color: #0b1007;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+.history-foot {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 11px;
+}
+
+.history-foot-label {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.08em;
+}
+
+.history-foot p {
+  margin-top: 4px;
+  color: var(--muted-dim);
+  font-size: 9px;
+  line-height: 1.65;
+}
+
+.history-foot b {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(var(--shell), calc(100% - 96px));
+  margin: 52px auto 0;
+  border-top: 1px solid var(--line);
+  padding: 20px 0 24px;
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Modals
+   -------------------------------------------------------------------------- */
+
+.modal {
+  width: min(940px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+  overflow: visible;
+}
+
+.modal[open] {
+  animation: modalIn 0.4s var(--ease) both;
+}
+
+.modal:focus,
+.modal:focus-visible {
+  outline: none;
+}
+
+.modal::backdrop {
+  background: rgba(3, 6, 4, 0.78);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  animation: backdropIn 0.35s ease both;
+}
+
+.modal-card {
+  position: relative;
+  max-height: calc(100vh - 32px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 26px;
+  padding: clamp(24px, 3.7vw, 40px);
+  background:
+    radial-gradient(circle at 96% 4%, rgba(217, 255, 88, 0.075), transparent 30%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.035), transparent 35%),
+    #0c120d;
+  box-shadow: 0 40px 110px rgba(0, 0, 0, 0.55);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(235, 241, 224, 0.18) transparent;
+}
+
+.modal-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-card::-webkit-scrollbar-thumb {
+  border-radius: 9px;
+  background: rgba(235, 241, 224, 0.16);
+}
+
+.modal-card:focus,
+.modal-card:focus-visible {
+  outline: none;
+}
+
+.modal-close {
+  position: absolute;
+  z-index: 3;
+  top: 18px;
+  right: 18px;
+}
+
+.rules-modal {
+  width: min(720px, calc(100vw - 32px));
+}
+
+.rules-modal h2 {
+  margin-top: 18px;
+  padding-right: 34px;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3.5vw, 2.7rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.16;
+}
+
+.rules-scroll {
+  margin-top: 22px;
+}
+
+.rule-section {
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+}
+
+.rule-section:last-child {
+  padding-bottom: 0;
+}
+
+.rule-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rule-section h3 span {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.rule-section > p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.8;
+}
+
+.rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 11px;
+  list-style: none;
+}
+
+.rule-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.rule-list strong {
+  flex: 0 0 72px;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.rule-example {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  margin-top: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.rule-example > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-dim);
+  font-size: 9px;
+}
+
+.rule-example strong {
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+.rule-example-hints {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.rule-fineprint {
+  font-size: 9.5px !important;
+  color: var(--muted-dim) !important;
+}
+
+.score-rules {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 11px;
+}
+
+.score-rules > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 9px 10px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.score-rules span {
+  color: var(--muted);
+  font-size: 9.5px;
+  line-height: 1.4;
+}
+
+.score-rules strong {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.score-rules small {
+  grid-column: 1 / -1;
+  margin-top: 3px;
+  color: var(--muted-dim);
+  font-size: 8px;
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------------
+   Result dialog
+   -------------------------------------------------------------------------- */
+
+.result-modal {
+  width: min(980px, calc(100vw - 32px));
+}
+
+.result-card {
+  overflow-y: auto;
+  padding: clamp(23px, 3.4vw, 38px);
+}
+
+.result-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-right: 46px;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  line-height: 1.5;
+}
+
+.result-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.38fr) minmax(240px, 0.62fr);
+  gap: clamp(26px, 4vw, 44px);
+  margin-top: 23px;
+}
+
+.result-main {
+  min-width: 0;
+}
+
+.result-main h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.result-sub {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.7;
+}
+
+.result-sub b {
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.result-secret-wrap {
+  margin-top: 22px;
+}
+
+.result-label {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.1em;
+}
+
+.result-secret {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.result-secret span {
+  display: grid;
+  place-items: center;
+  width: clamp(46px, 5.4vw, 58px);
+  height: clamp(54px, 6.3vw, 68px);
+  border: 1px solid rgba(217, 255, 88, 0.42);
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgba(217, 255, 88, 0.09), transparent),
+    rgba(217, 255, 88, 0.04);
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: secretReveal 0.55s var(--ease) both;
+  animation-delay: calc(0.12s + var(--i, 0) * 80ms);
+}
+
+.result-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+}
+
+.result-metrics > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.result-metrics > div + div {
+  border-left: 1px solid var(--line);
+  padding-left: 14px;
+}
+
+.result-metrics span {
+  color: var(--muted-dim);
+  font-size: 8.5px;
+  line-height: 1.4;
+}
+
+.result-metrics strong {
+  overflow: hidden;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.breakdown-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+
+.breakdown-label strong {
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.breakdown-track {
+  overflow: hidden;
+  height: 3px;
+  margin-top: 5px;
+  border-radius: 999px;
+  background: rgba(235, 241, 224, 0.09);
+}
+
+.breakdown-track i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--acid);
+  transition: width 1s var(--ease);
+}
+
+.breakdown-row:nth-child(2) .breakdown-track i {
+  background: var(--amber);
+}
+
+.breakdown-row:nth-child(3) .breakdown-track i {
+  background: #a8c4ff;
+}
+
+.result-comment {
+  margin-top: 17px;
+  border-left: 2px solid rgba(217, 255, 88, 0.55);
+  padding: 2px 0 2px 11px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+.result-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px 14px;
+  margin-top: 22px;
+}
+
+.result-actions .primary-button {
+  min-height: 48px;
+  min-width: 190px;
+  padding: 0 10px 0 17px;
+}
+
+.result-actions .primary-button .button-arrow {
+  width: 27px;
+  height: 27px;
+  flex-basis: 27px;
+  font-size: 12px;
+}
+
+.result-actions .secondary-button {
+  min-height: 48px;
+  padding: 0 15px;
+}
+
+.result-actions .text-button {
+  margin-left: auto;
+}
+
+.score-side {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--line);
+  padding-left: clamp(22px, 3vw, 38px);
+  text-align: center;
+}
+
+.score-side-label {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+}
+
+.score-ring {
+  --score-angle: 0deg;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(145px, 16vw, 186px);
+  aspect-ratio: 1;
+  margin-top: 17px;
+  border-radius: 50%;
+  background: conic-gradient(var(--acid) 0deg var(--score-angle), rgba(235, 241, 224, 0.08) var(--score-angle) 360deg);
+  box-shadow: 0 0 55px rgba(217, 255, 88, 0.08);
+}
+
+.score-ring::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.score-ring::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 10px rgba(217, 255, 88, 0.7);
+}
+
+.score-ring-inner {
+  display: flex;
+  width: 76%;
+  height: 76%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #0c120d;
+}
+
+.score-ring-inner strong {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 4vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.score-ring-inner span {
+  margin-top: 3px;
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+.grade-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 19px;
+  text-align: left;
+}
+
+.grade-stamp {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border: 1px solid rgba(217, 255, 88, 0.45);
+  border-radius: 9px;
+  transform: rotate(-5deg);
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.grade-line > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.grade-line strong {
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.grade-line small {
+  color: var(--muted-dim);
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+}
+
+.result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 14px;
+}
+
+.result-tag {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 7px;
+  color: var(--muted-dim);
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.score-note {
+  margin-top: 21px;
+  border-top: 1px solid var(--line);
+  padding-top: 11px;
+  color: var(--muted-dim);
+  font-size: 8.5px;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Animations
+   -------------------------------------------------------------------------- */
+
+@keyframes viewIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes previewPop {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scanSweep {
+  0%,
+  16% {
+    top: 24%;
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.65;
+  }
+  50% {
+    top: 78%;
+    opacity: 0.2;
+  }
+  59%,
+  100% {
+    top: 78%;
+    opacity: 0;
+  }
+}
+
+@keyframes softPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes subFieldIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes latestIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slotShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes secretReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .setup-grid {
+    grid-template-columns: minmax(0, 1fr) 440px;
+    gap: 42px;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.1rem, 5.5vw, 4.8rem);
+  }
+
+  .game-grid {
+    grid-template-columns: minmax(0, 1.04fr) minmax(380px, 0.96fr);
+  }
+
+  .history-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .history-content {
+    gap: 8px;
+  }
+
+  .hint-block {
+    min-width: 51px;
+    padding: 4px 6px;
+  }
+
+  .guess-chip {
+    width: 21px;
+    height: 26px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 1020px) {
+  .setup-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 46px;
+  }
+
+  .hero {
+    max-width: 760px;
+  }
+
+  .setup-card {
+    max-width: 690px;
+  }
+
+  .preview-wrap,
+  .hero-lede,
+  .hero-metrics {
+    max-width: 610px;
+  }
+
+  .briefing {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+
+  .briefing-heading {
+    grid-row: auto;
+  }
+
+  .briefing-heading h2 br {
+    display: none;
+  }
+
+  .briefing-grid {
+    max-width: 760px;
+  }
+
+  .game-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .game-spec {
+    width: 100%;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .game-spec .text-button {
+    grid-column: auto;
+    justify-self: end;
+  }
+
+  .game-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .history-panel {
+    position: static;
+  }
+
+  .history-list {
+    max-height: 480px;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    font-size: 14px;
+  }
+
+  .shell,
+  .topbar,
+  .site-footer {
+    width: calc(100% - 40px);
+  }
+
+  .topbar {
+    padding: 18px 0;
+  }
+
+  .brand-copy strong {
+    font-size: 20px;
+  }
+
+  .brand-copy small {
+    font-size: 7px;
+  }
+
+  .topbar-actions {
+    gap: 14px;
+  }
+
+  .local-pill {
+    display: none;
+  }
+
+  .setup-view {
+    padding-top: 13px;
+  }
+
+  .hero {
+    padding-top: 5px;
+  }
+
+  .hero h1 {
+    margin-top: 18px;
+    font-size: clamp(2.6rem, 10.8vw, 3.7rem);
+    line-height: 1.08;
+  }
+
+  .hero-lede {
+    margin-top: 19px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .preview-wrap {
+    margin-top: 28px;
+  }
+
+  .secret-preview {
+    padding: 15px;
+    border-radius: 17px;
+  }
+
+  .preview-digit {
+    border-radius: 8px;
+  }
+
+  .hero-metrics {
+    margin-top: 22px;
+    padding-top: 15px;
+  }
+
+  .hero-metric {
+    padding-right: 11px;
+  }
+
+  .hero-metric + .hero-metric {
+    padding-left: 13px;
+  }
+
+  .metric-value {
+    font-size: 14px;
+  }
+
+  .metric-label {
+    font-size: 8.5px;
+  }
+
+  .setup-grid {
+    gap: 34px;
+  }
+
+  .setup-card {
+    border-radius: 22px;
+    padding: 21px 18px;
+  }
+
+  .setup-card h2 {
+    font-size: 1.7rem;
+  }
+
+  .setup-intro {
+    font-size: 11px;
+  }
+
+  .field {
+    margin-top: 21px;
+  }
+
+  .field-title {
+    font-size: 12px;
+  }
+
+  .field-help {
+    font-size: 9.5px;
+  }
+
+  .mode-body {
+    padding: 8px;
+  }
+
+  .mode-body strong {
+    font-size: 11px;
+  }
+
+  .mode-body small {
+    font-size: 8px;
+    white-space: normal;
+  }
+
+  .difficulty-copy small {
+    font-size: 8px;
+  }
+
+  .setup-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .summary-chips {
+    justify-content: flex-start;
+  }
+
+  .summary-count {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .summary-count strong {
+    font-size: 18px;
+  }
+
+  .briefing {
+    margin-top: 62px;
+    padding-top: 28px;
+  }
+
+  .briefing-heading h2 {
+    margin-top: 13px;
+  }
+
+  .briefing-grid {
+    grid-template-columns: 1fr;
+    gap: 21px;
+  }
+
+  .briefing-card {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 1px 5px;
+    padding-top: 11px;
+  }
+
+  .briefing-number {
+    grid-row: 1 / span 2;
+    padding-top: 2px;
+  }
+
+  .briefing-card h3 {
+    margin-top: 0;
+  }
+
+  .briefing-card p {
+    font-size: 10.5px;
+  }
+
+  .example-strip {
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .example-label {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 0 0 8px;
+  }
+
+  .example-guess {
+    display: block;
+  }
+
+  .example-caption {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 8px;
+  }
+
+  .example-hints {
+    align-self: end;
+  }
+
+  .example-hint {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 4px 7px;
+  }
+
+  .example-hint strong {
+    font-size: 16px;
+  }
+
+  .example-strip > p {
+    font-size: 8.5px;
+  }
+
+  .game-view {
+    padding-top: 7px;
+  }
+
+  .game-heading {
+    gap: 17px;
+    padding-bottom: 20px;
+  }
+
+  .game-heading h1 {
+    margin-top: 9px;
+  }
+
+  .game-lede {
+    font-size: 11px;
+  }
+
+  .game-spec {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 14px;
+    padding: 11px 12px;
+  }
+
+  .game-spec .text-button {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding-top: 2px;
+    font-size: 9.5px;
+  }
+
+  .game-grid {
+    margin-top: 14px;
+    gap: 14px;
+  }
+
+  .guess-panel,
+  .history-panel {
+    border-radius: 18px;
+  }
+
+  .guess-panel {
+    padding: 18px 16px;
+  }
+
+  #guessActive > h2,
+  .finish-panel > h2 {
+    margin-top: 19px;
+  }
+
+  .slot-row {
+    gap: 6px;
+  }
+
+  .slot {
+    border-radius: 9px;
+    font-size: clamp(1.6rem, 7.5vw, 2rem);
+  }
+
+  .guess-field {
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .clear-button {
+    padding: 0 6px;
+    font-size: 9px;
+  }
+
+  .guess-form-meta {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .validation-message {
+    text-align: left;
+  }
+
+  .field-hint {
+    font-size: 8.5px;
+  }
+
+  .submit-button {
+    min-height: 51px;
+  }
+
+  .history-panel {
+    padding: 18px 16px;
+  }
+
+  .history-list {
+    min-height: 190px;
+    max-height: 460px;
+  }
+
+  .history-empty {
+    min-height: 180px;
+  }
+
+  .history-content {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .history-hints {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+
+  .hint-block {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 5px 8px;
+  }
+
+  .history-row {
+    grid-template-columns: 26px minmax(0, 1fr);
+    padding: 10px;
+  }
+
+  .guess-chip {
+    width: 24px;
+    height: 29px;
+    font-size: 12px;
+  }
+
+  .footnote-note {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .finish-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    margin-top: 36px;
+    padding-bottom: 20px;
+  }
+
+  .modal {
+    width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+  }
+
+  .modal-card {
+    max-height: calc(100vh - 20px);
+    border-radius: 20px;
+    padding: 23px 18px;
+  }
+
+  .modal-close {
+    top: 13px;
+    right: 13px;
+  }
+
+  .rules-modal {
+    width: calc(100vw - 20px);
+  }
+
+  .rule-example {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .rule-example > div {
+    justify-content: space-between;
+  }
+
+  .rule-example-hints {
+    justify-content: flex-start;
+  }
+
+  .score-rules {
+    grid-template-columns: 1fr;
+  }
+
+  .result-modal {
+    width: calc(100vw - 20px);
+  }
+
+  .result-card {
+    overflow-y: auto;
+    padding: 22px 17px;
+  }
+
+  .result-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .result-main {
+    display: contents;
+  }
+
+  .result-main > .result-sub,
+  .result-main > .result-secret-wrap,
+  .result-main > .result-metrics {
+    order: 0;
+  }
+
+  .result-kicker {
+    font-size: 8px;
+  }
+
+  .result-main h2 {
+    font-size: clamp(2.5rem, 12vw, 3.3rem);
+  }
+
+  .result-secret span {
+    width: 44px;
+    height: 52px;
+    font-size: 1.45rem;
+  }
+
+  .result-metrics strong {
+    font-size: 16px;
+  }
+
+  .score-side {
+    order: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px 18px;
+    margin-top: 4px;
+    border-top: 0;
+    border-bottom: 1px solid var(--line);
+    border-left: 0;
+    padding: 14px 0 18px;
+    text-align: left;
+  }
+
+  .score-ring {
+    width: 104px;
+    flex: 0 0 104px;
+    margin-top: 0;
+  }
+
+  .score-side-label {
+    display: none;
+  }
+
+  .grade-line {
+    margin-top: 0;
+  }
+
+  .result-tags {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    margin-top: 0;
+  }
+
+  .breakdown {
+    order: 2;
+  }
+
+  .result-comment {
+    order: 3;
+  }
+
+  .result-actions {
+    order: 4;
+    align-items: stretch;
+  }
+
+  .result-actions .primary-button {
+    width: 100%;
+  }
+
+  .result-actions .secondary-button {
+    flex: 1;
+  }
+
+  .result-actions .text-button {
+    margin-left: 0;
+  }
+
+  .score-note {
+    margin-top: 17px;
+  }
+}
+
+@media (max-width: 430px) {
+  .shell,
+  .topbar,
+  .site-footer {
+    width: calc(100% - 28px);
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-mark {
+    width: 23px;
+    height: 23px;
+    grid-template-columns: repeat(2, 6px);
+    grid-template-rows: repeat(2, 6px);
+    padding: 3px;
+  }
+
+  .brand-copy strong {
+    font-size: 18px;
+  }
+
+  .brand-copy small {
+    max-width: 150px;
+    font-size: 6px;
+  }
+
+  .topbar-actions .text-button {
+    font-size: 10px;
+  }
+
+  .hero h1 {
+    font-size: 2.48rem;
+  }
+
+  .hero-metrics {
+    gap: 0;
+  }
+
+  .metric-label {
+    font-size: 8px;
+  }
+
+  .mode-options {
+    gap: 5px;
+  }
+
+  .mode-body {
+    min-height: 59px;
+    padding: 7px 6px;
+  }
+
+  .mode-body strong {
+    font-size: 10.5px;
+  }
+
+  .mode-body small {
+    font-size: 7.5px;
+  }
+
+  .length-option > span {
+    height: 48px;
+  }
+
+  .length-option strong {
+    font-size: 18px;
+  }
+
+  .difficulty-body {
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 7px 9px;
+  }
+
+  .difficulty-copy small {
+    white-space: normal;
+  }
+
+  .signal-bars {
+    width: 20px;
+  }
+
+  .signal-bars i {
+    width: 4px;
+  }
+
+  .setup-summary {
+    margin-top: 18px;
+  }
+
+  .guess-panel {
+    padding: 16px 12px;
+  }
+
+  .history-panel {
+    padding: 16px 12px;
+  }
+
+  .round-counter {
+    font-size: 9px;
+  }
+
+  .slot {
+    font-size: 1.5rem;
+  }
+
+  .clear-button {
+    font-size: 8px;
+    padding: 0 4px;
+    min-height: 33px;
+  }
+
+  .submit-key {
+    width: 27px;
+    font-size: 7px;
+  }
+
+  .history-row {
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .guess-chip {
+    width: 22px;
+    height: 27px;
+  }
+
+  .result-secret span {
+    width: 40px;
+    height: 48px;
+    font-size: 1.3rem;
+  }
+
+  .result-actions {
+    gap: 8px;
+  }
+
+  .result-actions .secondary-button {
+    width: 100%;
+  }
+
+  .result-actions .text-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">跳到主要内容</a>
+
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop-orb backdrop-orb-a"></div>
+    <div class="backdrop-orb backdrop-orb-b"></div>
+    <div class="backdrop-grid"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand" aria-label="数隐 NUMEN 数字推理实验室">
+      <span class="brand-mark" aria-hidden="true">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <span class="brand-copy">
+        <strong>数隐</strong>
+        <small>NUMEN / 数字推理实验室</small>
+      </span>
+    </div>
+    <div class="topbar-actions">
+      <span class="local-pill"><i aria-hidden="true"></i> 本地运行</span>
+      <button class="text-button" type="button" data-open-rules>玩法说明</button>
+    </div>
+  </header>
+
+  <main id="mainContent" class="shell">
+    <!-- ============================== SETUP ============================== -->
+    <section id="setupView" class="view setup-view" aria-labelledby="heroTitle">
+      <div class="setup-grid">
+        <div class="hero">
+          <p class="eyebrow"><span class="eyebrow-line"></span>DIGITAL DEDUCTION / 数字推理</p>
+          <h1 id="heroTitle">
+            <span>数字藏于暗处</span>
+            <span><em>逻辑</em>让它显形。</span>
+          </h1>
+          <p class="hero-lede">
+            系统会封存一个你看不见的数字。每次提交猜测，只换来两条线索：
+            <strong>几个数字对了</strong>，以及其中<strong>几个位置也对了</strong>。
+            没有倒计时，直到你锁定唯一答案。
+          </p>
+
+          <div class="preview-wrap">
+            <div class="secret-preview" aria-hidden="true">
+              <div class="preview-head">
+                <span>SEALED NUMBER / 暗数封存</span>
+                <span class="preview-status"><i></i> ENCRYPTED</span>
+              </div>
+              <div id="previewDigits" class="preview-digits"></div>
+              <div class="preview-foot">
+                <span>等待第一次推理</span>
+                <span>首位 ≠ 0</span>
+              </div>
+              <span class="scan-line" aria-hidden="true"></span>
+            </div>
+
+            <div class="floating-clue floating-clue-digits" aria-hidden="true">
+              <span>数字命中</span>
+              <strong>02</strong>
+            </div>
+            <div class="floating-clue floating-clue-positions" aria-hidden="true">
+              <span>位置命中</span>
+              <strong>01</strong>
+            </div>
+          </div>
+
+          <div class="hero-metrics">
+            <div class="hero-metric">
+              <span class="metric-value">3–6</span>
+              <span class="metric-label">自由位数</span>
+            </div>
+            <div class="hero-metric">
+              <span class="metric-value">0–9</span>
+              <span class="metric-label">完整数字域</span>
+            </div>
+            <div class="hero-metric">
+              <span class="metric-value">∞</span>
+              <span class="metric-label">推理轮次</span>
+            </div>
+          </div>
+        </div>
+
+        <section class="setup-card" aria-labelledby="setupTitle">
+          <form id="setupForm" novalidate>
+            <div class="setup-card-head">
+              <div>
+                <p class="panel-index">CASE SETUP / 本局设定</p>
+                <h2 id="setupTitle">定制你的暗数。</h2>
+              </div>
+              <span class="setup-stamp">01</span>
+            </div>
+            <p class="setup-intro">锁定位数、重复规则与数字域，接着让系统生成暗数。</p>
+
+            <fieldset class="field">
+              <legend class="field-title">数字位数 <span>LENGTH</span></legend>
+              <p class="field-help">猜测与暗数始终等长。</p>
+              <div class="length-options">
+                <label class="length-option">
+                  <input type="radio" name="length" value="3">
+                  <span><strong>3</strong><small>位</small></span>
+                </label>
+                <label class="length-option">
+                  <input type="radio" name="length" value="4" checked>
+                  <span><strong>4</strong><small>位</small></span>
+                </label>
+                <label class="length-option">
+                  <input type="radio" name="length" value="5">
+                  <span><strong>5</strong><small>位</small></span>
+                </label>
+                <label class="length-option">
+                  <input type="radio" name="length" value="6">
+                  <span><strong>6</strong><small>位</small></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend class="field-title">重复规则 <span>REPETITION</span></legend>
+              <p class="field-help">选择暗数中是否允许同一位数字出现多次。</p>
+              <div class="mode-options">
+                <label class="mode-option">
+                  <input type="radio" name="repeatMode" value="none" checked>
+                  <span class="mode-body">
+                    <strong>不重复</strong>
+                    <small>每位互不相同</small>
+                  </span>
+                </label>
+                <label class="mode-option">
+                  <input type="radio" name="repeatMode" value="any">
+                  <span class="mode-body">
+                    <strong>可重复</strong>
+                    <small>任意次数皆可</small>
+                  </span>
+                </label>
+                <label class="mode-option">
+                  <input type="radio" name="repeatMode" value="exact">
+                  <span class="mode-body">
+                    <strong>精确重复</strong>
+                    <small>指定重复席位</small>
+                  </span>
+                </label>
+              </div>
+
+              <div id="exactRepeatPanel" class="exact-panel" hidden>
+                <div class="exact-head">
+                  <span>重复席位</span>
+                  <small>参与重复的数字位数</small>
+                </div>
+                <div id="exactRepeatOptions" class="exact-options" role="radiogroup" aria-label="重复席位数"></div>
+                <p class="field-help exact-help">例如：1123 有 2 个重复席位；1122 有 4 个。其余位置必须是不同的单个数字。</p>
+              </div>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend class="field-title">难度等级 <span>DIFFICULTY</span></legend>
+              <p class="field-help">难度只改变可选数字域，不改变反馈规则。</p>
+              <div class="difficulty-options">
+                <label class="difficulty-option">
+                  <input type="radio" name="difficulty" value="easy">
+                  <span class="difficulty-body">
+                    <span class="signal-bars signal-1" aria-hidden="true"><i></i><i></i><i></i></span>
+                    <span class="difficulty-copy"><strong>轻松</strong><small>收窄数字域，适合热身。</small></span>
+                    <span class="range-code">0–5</span>
+                  </span>
+                </label>
+                <label class="difficulty-option">
+                  <input type="radio" name="difficulty" value="standard" checked>
+                  <span class="difficulty-body">
+                    <span class="signal-bars signal-2" aria-hidden="true"><i></i><i></i><i></i></span>
+                    <span class="difficulty-copy"><strong>进阶</strong><small>标准推理强度，留有余地。</small></span>
+                    <span class="range-code">0–7</span>
+                  </span>
+                </label>
+                <label class="difficulty-option">
+                  <input type="radio" name="difficulty" value="hard">
+                  <span class="difficulty-body">
+                    <span class="signal-bars signal-3" aria-hidden="true"><i></i><i></i><i></i></span>
+                    <span class="difficulty-copy"><strong>挑战</strong><small>完整数字域，只靠线索收网。</small></span>
+                    <span class="range-code">0–9</span>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="setup-summary" aria-live="polite">
+              <div class="summary-count">
+                <span>可能暗数</span>
+                <strong id="setupCandidateCount">—</strong>
+              </div>
+              <div id="setupChips" class="summary-chips"></div>
+            </div>
+
+            <button class="primary-button setup-submit" type="submit">
+              <span>生成暗数，开始推理</span>
+              <span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+            <p class="privacy-note">暗数在当前浏览器内随机生成 · 不上传任何数据</p>
+          </form>
+        </section>
+      </div>
+
+      <section class="briefing" aria-labelledby="briefingTitle">
+        <div class="briefing-heading">
+          <p class="eyebrow"><span class="eyebrow-line"></span>FIELD BRIEFING / 规则速览</p>
+          <h2 id="briefingTitle">只有两条线索，<br>足够逼近唯一答案。</h2>
+        </div>
+        <div class="briefing-grid">
+          <article class="briefing-card">
+            <span class="briefing-number">01</span>
+            <h3>系统封存暗数</h3>
+            <p>按照你选择的位数、重复席位和难度生成一个 n 位数。首位不会是 0，生成后全程不可见。</p>
+          </article>
+          <article class="briefing-card">
+            <span class="briefing-number">02</span>
+            <h3>每轮换取线索</h3>
+            <p>输入一个符合本局设定的数。系统会告诉你：暗数中有几个数字被命中，以及其中几个在正确位置。</p>
+          </article>
+          <article class="briefing-card">
+            <span class="briefing-number">03</span>
+            <h3>锁定每个位置</h3>
+            <p>猜测与线索会按轮次归入同一份推演轨迹。全部位置命中即破译成功，随后得到次数与逻辑评分。</p>
+          </article>
+        </div>
+
+        <div class="example-strip" aria-label="线索示例">
+          <div class="example-label">
+            <span>READ THE CLUE</span>
+            <strong>线索示例</strong>
+          </div>
+          <div class="example-guess">
+            <span class="example-caption">暗数 4271 · 猜测 4173</span>
+            <div class="example-digits" aria-hidden="true">
+              <span>4</span><span>1</span><span>7</span><span>3</span>
+            </div>
+          </div>
+          <div class="example-hints">
+            <div class="example-hint example-hint-digits"><span>数字命中</span><strong>3</strong></div>
+            <div class="example-hint example-hint-positions"><span>位置命中</span><strong>2</strong></div>
+          </div>
+          <p>数字命中包含位置命中：位置命中一定是数字命中里的子集。</p>
+        </div>
+      </section>
+    </section>
+
+    <!-- ============================== GAME ============================== -->
+    <section id="gameView" class="view game-view" aria-labelledby="gameTitle" hidden>
+      <div class="game-heading">
+        <div>
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span id="caseStatus">CASE ACTIVE / 本局进行中</span></p>
+          <h1 id="gameTitle">逐位收网<span class="title-period">。</span></h1>
+          <p class="game-lede">每次提交只换取两条线索。把它们记进同一份推演轨迹，再缩小下一猜的范围。</p>
+        </div>
+        <div class="game-spec">
+          <div class="spec-item">
+            <span>本局设定</span>
+            <strong id="gameConfigText">—</strong>
+          </div>
+          <div class="spec-item">
+            <span>搜索空间</span>
+            <strong id="gameSpaceText">—</strong>
+          </div>
+          <button id="backToSetup" class="text-button" type="button">更换设定</button>
+        </div>
+      </div>
+
+      <div class="game-grid">
+        <section class="guess-panel" aria-labelledby="guessHeading">
+          <div class="guess-head">
+            <span class="panel-index">INPUT / 猜 测</span>
+            <span class="round-counter">第 <b id="roundNumber">01</b> 次</span>
+          </div>
+
+          <div id="guessActive">
+            <h2 id="guessHeading">输入你的猜测</h2>
+            <p id="guessHelp" class="panel-copy">—</p>
+            <div id="constraintChips" class="constraint-chips"></div>
+
+            <form id="guessForm" novalidate>
+              <div class="guess-field">
+                <div id="slotRow" class="slot-row" role="group" aria-label="输入猜测数字" style="--digits: 4;"></div>
+                <button id="clearGuess" class="clear-button" type="button">清空</button>
+              </div>
+              <div class="guess-form-meta">
+                <p class="field-hint">逐格填写 · <kbd>Enter</kbd> 提交</p>
+                <p id="guessError" class="validation-message" role="alert" hidden></p>
+              </div>
+              <button id="submitGuess" class="submit-button" type="submit">
+                <span>提交这一猜</span>
+                <span class="submit-key" aria-hidden="true">ENTER</span>
+              </button>
+            </form>
+
+            <div id="latestFeedback" class="latest-feedback" aria-live="polite" hidden></div>
+          </div>
+
+          <div id="gameFinished" class="finish-panel" hidden>
+            <p class="finish-kicker"><span></span> DECRYPTED / 破译完成</p>
+            <h2>暗数已现形。</h2>
+            <p class="finish-copy">你用了 <strong id="finishAttempts">0</strong> 次猜测，命中了全部位置。</p>
+            <div id="finishSecret" class="finish-secret" aria-label="本局暗数"></div>
+            <div class="finish-scoreline">
+              <span>逻辑评分</span>
+              <strong id="finishScore">—</strong>
+              <span id="finishGrade" class="mini-grade">—</span>
+            </div>
+            <div class="finish-actions">
+              <button id="openResult" class="primary-button" type="button">
+                <span>查看完整战报</span>
+                <span class="button-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button id="playAgainInline" class="secondary-button" type="button">同设定再来一局</button>
+            </div>
+            <button id="changeSetupInline" class="text-button centered" type="button">调整设定</button>
+          </div>
+
+          <div class="guess-footnote">
+            <span><i class="legend-dot legend-digits"></i>数字命中</span>
+            <span><i class="legend-dot legend-positions"></i>位置命中</span>
+            <span class="footnote-note">位置命中包含在数字命中内</span>
+          </div>
+        </section>
+
+        <aside class="history-panel" aria-labelledby="historyHeading">
+          <div class="history-head">
+            <div>
+              <p class="panel-index">TRACE / 推理轨迹</p>
+              <h2 id="historyHeading">猜测与线索</h2>
+            </div>
+            <span class="history-count"><b id="historyCount">00</b> 轮</span>
+          </div>
+          <p class="history-note">所有猜测与两项线索，都按轮次归档在同一个地方。</p>
+
+          <div id="historyList" class="history-list">
+            <div class="history-empty">
+              <div class="empty-target" aria-hidden="true"><span>?</span></div>
+              <p>还没有提交过猜测</p>
+              <span>第一条线索会出现在这里。</span>
+            </div>
+          </div>
+
+          <div class="history-foot">
+            <span class="history-foot-label">线索读法</span>
+            <p><b>数字命中</b>统计猜中的数字总数；<b>位置命中</b>是其中处在正确位置的数量。</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>NUMEN © 2026 · 数隐</span>
+    <span>离线可用 · 随机过程仅发生在此浏览器</span>
+  </footer>
+
+  <div id="liveRegion" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ============================== RULES DIALOG ============================== -->
+  <dialog id="rulesDialog" class="modal rules-modal" aria-labelledby="rulesTitle">
+    <div class="modal-card">
+      <button class="icon-button modal-close" type="button" data-close-rules aria-label="关闭玩法说明">×</button>
+      <p class="eyebrow"><span class="eyebrow-line"></span>FIELD NOTES / 玩法</p>
+      <h2 id="rulesTitle">读懂两条线索。</h2>
+      <div class="rules-scroll">
+        <section class="rule-section">
+          <h3><span>01</span> 一个暗数，两条线索</h3>
+          <p>系统按你的设定随机生成一个 n 位数（首位不为 0）。每次输入同样位数的猜测后，会收到两个数字：</p>
+          <ul class="rule-list">
+            <li><strong>数字命中</strong><span>暗数与猜测中能够一一配对的数字总数。</span></li>
+            <li><strong>位置命中</strong><span>上述数字中，同时处在正确位置的数量；它永远包含在数字命中内。</span></li>
+          </ul>
+        </section>
+        <section class="rule-section">
+          <h3><span>02</span> 一个示例</h3>
+          <div class="rule-example">
+            <div><span>暗数</span><strong class="mono">4 2 7 1</strong></div>
+            <div><span>猜测</span><strong class="mono">4 1 7 3</strong></div>
+            <div class="rule-example-hints">
+              <span class="example-hint example-hint-digits">数字命中 <b>3</b></span>
+              <span class="example-hint example-hint-positions">位置命中 <b>2</b></span>
+            </div>
+          </div>
+          <p>数字 4、1、7 都在暗数中，所以数字命中为 3；其中 4 和 7 的位置也正确，所以位置命中为 2。</p>
+        </section>
+        <section class="rule-section">
+          <h3><span>03</span> 重复数字与重复席位</h3>
+          <p>选择“精确重复”时，需要指定重复席位：即所有出现超过一次的数字所占的位数。例如 1123 的重复席位是 2，1122 的重复席位是 4。玩家提交的猜测也必须符合当前重复设定。</p>
+        </section>
+        <section class="rule-section">
+          <h3><span>04</span> 逻辑评分</h3>
+          <p>破译后，系统根据本局搜索空间给出参考步数，并从三个维度评分：</p>
+          <div class="score-rules">
+            <div><span>推理效率</span><strong>65</strong><small>越接近参考步数，得分越高。</small></div>
+            <div><span>线索一致性</span><strong>20</strong><small>检验每次猜测是否仍与之前的线索相容。</small></div>
+            <div><span>信息探索</span><strong>15</strong><small>每次得到不同线索，会让评分更完整。</small></div>
+          </div>
+          <p class="rule-fineprint">参考步数由搜索空间和位数估算，是用于评分的宽松基准，并不代表数学上的最少步数。</p>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============================== RESULT DIALOG ============================== -->
+  <dialog id="resultDialog" class="modal result-modal" aria-labelledby="resultTitle">
+    <div class="modal-card result-card">
+      <button class="icon-button modal-close" id="closeResult" type="button" aria-label="关闭战报">×</button>
+      <p class="result-kicker"><span class="status-dot" aria-hidden="true"></span>DECRYPTED / 破译完成</p>
+
+      <div class="result-layout">
+        <div class="result-main">
+          <h2 id="resultTitle">暗数现形。</h2>
+          <p class="result-sub">你在第 <b id="resultAttemptsInline">0</b> 次猜测中，命中了所有位置。</p>
+
+          <div class="result-secret-wrap">
+            <span class="result-label">本局暗数</span>
+            <div id="resultSecret" class="result-secret" aria-label="本局暗数"></div>
+          </div>
+
+          <div class="result-metrics">
+            <div><span>猜测次数</span><strong id="resultAttempts">0</strong></div>
+            <div><span>参考步数</span><strong id="resultTarget">0</strong></div>
+            <div><span>搜索空间</span><strong id="resultSpace">0</strong></div>
+          </div>
+
+          <div class="breakdown">
+            <div class="breakdown-row">
+              <div class="breakdown-label"><span>推理效率</span><strong id="effScore">0 / 65</strong></div>
+              <div class="breakdown-track"><i id="effBar"></i></div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-label"><span>线索一致性</span><strong id="consistencyScore">0 / 20</strong></div>
+              <div class="breakdown-track"><i id="consistencyBar"></i></div>
+            </div>
+            <div class="breakdown-row">
+              <div class="breakdown-label"><span>信息探索</span><strong id="informationScore">0 / 15</strong></div>
+              <div class="breakdown-track"><i id="informationBar"></i></div>
+            </div>
+          </div>
+
+          <p id="resultComment" class="result-comment"></p>
+
+          <div class="result-actions">
+            <button id="playAgainBtn" class="primary-button" type="button">
+              <span>同设定再来一局</span>
+              <span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+            <button id="changeSetupBtn" class="secondary-button" type="button">调整设定</button>
+            <button id="viewHistoryBtn" class="text-button" type="button">查看本局记录</button>
+          </div>
+        </div>
+
+        <aside class="score-side" aria-label="逻辑评分">
+          <p class="score-side-label">LOGIC SCORE</p>
+          <div id="scoreRing" class="score-ring" style="--score-angle: 0deg;">
+            <div class="score-ring-inner">
+              <strong id="resultScore">0</strong>
+              <span>/ 100</span>
+            </div>
+          </div>
+          <div class="grade-line">
+            <span id="resultGrade" class="grade-stamp">S</span>
+            <div>
+              <strong id="resultGradeLabel">神机妙算</strong>
+              <small id="resultGradeStamp">GRADE</small>
+            </div>
+          </div>
+          <div id="resultTags" class="result-tags"></div>
+        </aside>
+      </div>
+
+      <p class="score-note">评分 = 推理效率 65% + 线索一致性 20% + 信息探索 15%。参考步数根据本局搜索空间与位数估算。</p>
+    </div>
+  </dialog>
+
+  <script>
+/*
+ * 数隐 NUMEN — game rules, secret generation and scoring.
+ * Plain browser script (no build step, no dependencies). Also exports for Node tests.
+ */
+const DSGame = (() => {
+  'use strict';
+
+  const MIN_LENGTH = 3;
+  const MAX_LENGTH = 6;
+
+  const DIFFICULTIES = Object.freeze({
+    easy: Object.freeze({
+      key: 'easy',
+      name: '轻松',
+      poolSize: 6,
+      range: '0–5',
+      blurb: '收窄数字域，适合热身。',
+    }),
+    standard: Object.freeze({
+      key: 'standard',
+      name: '进阶',
+      poolSize: 8,
+      range: '0–7',
+      blurb: '标准推理强度，留有余地。',
+    }),
+    hard: Object.freeze({
+      key: 'hard',
+      name: '挑战',
+      poolSize: 10,
+      range: '0–9',
+      blurb: '完整数字域，只靠线索收网。',
+    }),
+  });
+
+  const REPEAT_MODES = Object.freeze({
+    none: Object.freeze({ key: 'none', name: '不重复', short: '无重复' }),
+    any: Object.freeze({ key: 'any', name: '可重复', short: '任意重复' }),
+    exact: Object.freeze({ key: 'exact', name: '精确重复', short: '精确重复' }),
+  });
+
+  const GRADES = Object.freeze([
+    Object.freeze({ min: 94, letter: 'S', title: '神机妙算', note: '推理链干净利落，几乎没有多余试探。' }),
+    Object.freeze({ min: 84, letter: 'A', title: '抽丝剥茧', note: '线索利用扎实，节奏控制得很好。' }),
+    Object.freeze({ min: 70, letter: 'B', title: '条理清晰', note: '思路基本稳定，还能再压缩几步。' }),
+    Object.freeze({ min: 55, letter: 'C', title: '渐入佳境', note: '已经找到方向，下一次可以更聚焦。' }),
+    Object.freeze({ min: 0, letter: 'D', title: '尚待打磨', note: '先排除与线索矛盾的猜测，效率会明显提升。' }),
+  ]);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function factorial(value) {
+    let result = 1;
+    for (let i = 2; i <= value; i += 1) result *= i;
+    return result;
+  }
+
+  function permutations(total, take) {
+    if (take < 0 || take > total) return 0;
+    return factorial(total) / factorial(total - take);
+  }
+
+  function normalizeConfig(raw = {}) {
+    const length = clamp(Number.parseInt(raw.length, 10) || 4, MIN_LENGTH, MAX_LENGTH);
+    const difficultyKey = Object.prototype.hasOwnProperty.call(DIFFICULTIES, raw.difficulty)
+      ? raw.difficulty
+      : 'standard';
+    const repeatMode = Object.prototype.hasOwnProperty.call(REPEAT_MODES, raw.repeatMode)
+      ? raw.repeatMode
+      : 'none';
+    let exactRepeat = Number.parseInt(raw.exactRepeat, 10);
+    if (!Number.isFinite(exactRepeat)) exactRepeat = 2;
+    exactRepeat = clamp(exactRepeat, 2, length);
+
+    return Object.freeze({
+      length,
+      difficulty: difficultyKey,
+      repeatMode,
+      exactRepeat,
+    });
+  }
+
+  function getDifficulty(config) {
+    return DIFFICULTIES[config.difficulty] || DIFFICULTIES.standard;
+  }
+
+  function getDigitPoolSize(config) {
+    return getDifficulty(config).poolSize;
+  }
+
+  function getDigitPool(config) {
+    const size = getDigitPoolSize(config);
+    return Array.from({ length: size }, (_, index) => String(index));
+  }
+
+  function secureRandomInt(max) {
+    if (!Number.isFinite(max) || max <= 0) return 0;
+    if (globalThis.crypto && typeof globalThis.crypto.getRandomValues === 'function') {
+      const limit = Math.floor(4294967296 / max) * max;
+      const values = new Uint32Array(1);
+      do {
+        globalThis.crypto.getRandomValues(values);
+      } while (values[0] >= limit);
+      return values[0] % max;
+    }
+    return Math.floor(Math.random() * max);
+  }
+
+  function shuffle(values) {
+    for (let i = values.length - 1; i > 0; i -= 1) {
+      const j = secureRandomInt(i + 1);
+      const temp = values[i];
+      values[i] = values[j];
+      values[j] = temp;
+    }
+    return values;
+  }
+
+  function pick(values) {
+    return values[secureRandomInt(values.length)];
+  }
+
+  /**
+   * Generate all integer partitions of `total` whose parts are at least `minPart`.
+   * Example: partitions(4, 2) -> [[2, 2], [4]]
+   */
+  function integerPartitions(total, minPart = 2) {
+    const result = [];
+    const prefix = [];
+
+    function walk(remaining) {
+      if (remaining === 0) {
+        result.push(prefix.slice());
+        return;
+      }
+      const floor = prefix.length ? prefix[prefix.length - 1] : minPart;
+      for (let part = floor; part <= remaining; part += 1) {
+        const next = remaining - part;
+        if (next > 0 && next < part) continue;
+        prefix.push(part);
+        walk(next);
+        prefix.pop();
+      }
+    }
+
+    walk(total);
+    return result;
+  }
+
+  function countRepeatedSlots(value) {
+    const counts = new Array(10).fill(0);
+    for (const character of String(value)) {
+      const digit = Number(character);
+      if (Number.isInteger(digit) && digit >= 0 && digit <= 9) counts[digit] += 1;
+    }
+    return counts.reduce((total, count) => total + (count > 1 ? count : 0), 0);
+  }
+
+  function countExactCandidates(length, poolSize, repeatSlots) {
+    if (repeatSlots < 2 || repeatSlots > length) return 0;
+    const singleCount = length - repeatSlots;
+    let total = 0;
+
+    for (const groups of integerPartitions(repeatSlots, 2)) {
+      const parts = groups.concat(new Array(singleCount).fill(1));
+      const distinctCount = parts.length;
+      if (distinctCount > poolSize) continue;
+
+      const groupCounts = new Map();
+      for (const part of parts) {
+        groupCounts.set(part, (groupCounts.get(part) || 0) + 1);
+      }
+
+      let denominator = 1;
+      for (const [partSize, amount] of groupCounts.entries()) {
+        denominator *= Math.pow(factorial(partSize), amount);
+        denominator *= factorial(amount);
+      }
+
+      const allSequences = (permutations(poolSize, distinctCount) * factorial(length)) / denominator;
+      // By symmetry, exactly 1/poolSize of the multisets start with zero.
+      total += Math.round(allSequences * ((poolSize - 1) / poolSize));
+    }
+
+    return total;
+  }
+
+  function countCandidates(rawConfig) {
+    const config = normalizeConfig(rawConfig);
+    const length = config.length;
+    const poolSize = getDigitPoolSize(config);
+
+    if (config.repeatMode === 'none') {
+      if (length > poolSize) return 0;
+      return Math.round(permutations(poolSize, length) * ((poolSize - 1) / poolSize));
+    }
+
+    if (config.repeatMode === 'any') {
+      return (poolSize - 1) * Math.pow(poolSize, length - 1);
+    }
+
+    return countExactCandidates(length, poolSize, config.exactRepeat);
+  }
+
+  function estimateGame(rawConfig) {
+    const config = normalizeConfig(rawConfig);
+    const candidateCount = Math.max(1, countCandidates(config));
+    const feedbackPatterns = ((config.length + 1) * (config.length + 2)) / 2;
+    const informationFloor = Math.max(
+      2,
+      Math.ceil(Math.log(candidateCount) / Math.log(feedbackPatterns)),
+    );
+    // A deliberately generous human reference, not a proven optimal path.
+    const target = Math.max(
+      config.length + 2,
+      Math.round(informationFloor + config.length * 0.75),
+    );
+
+    return {
+      candidateCount,
+      feedbackPatterns,
+      informationFloor,
+      target,
+    };
+  }
+
+  function generateNoRepeat(config, pool) {
+    const n = config.length;
+    if (n > pool.length) throw new Error('当前位数与数字域无法组成不重复暗数。');
+    const firstPool = pool.filter((digit) => digit !== '0');
+    const first = pick(firstPool);
+    const rest = shuffle(pool.filter((digit) => digit !== first)).slice(0, n - 1);
+    return first + rest.join('');
+  }
+
+  function generateAnyRepeat(config, pool) {
+    const first = pick(pool.filter((digit) => digit !== '0'));
+    let secret = first;
+    for (let i = 1; i < config.length; i += 1) secret += pick(pool);
+    return secret;
+  }
+
+  function generateExactRepeat(config, pool) {
+    const n = config.length;
+    const repeatSlots = config.exactRepeat;
+    const singleCount = n - repeatSlots;
+    const groups = pick(integerPartitions(repeatSlots, 2));
+    const distinctCount = groups.length + singleCount;
+    if (distinctCount > pool.length) throw new Error('当前重复设定与数字域无法组成暗数。');
+
+    let symbols = shuffle(pool.slice()).slice(0, distinctCount);
+    // With a single repeated symbol, zero would produce an all-zero string.
+    if (symbols.every((symbol) => symbol === '0')) {
+      symbols = [pick(pool.filter((digit) => digit !== '0'))];
+    }
+    const characters = [];
+    let symbolIndex = 0;
+
+    for (const groupSize of groups) {
+      const symbol = symbols[symbolIndex];
+      symbolIndex += 1;
+      for (let i = 0; i < groupSize; i += 1) characters.push(symbol);
+    }
+    for (let i = 0; i < singleCount; i += 1) {
+      characters.push(symbols[symbolIndex]);
+      symbolIndex += 1;
+    }
+
+    for (let attempt = 0; attempt < 500; attempt += 1) {
+      shuffle(characters);
+      if (characters[0] !== '0') return characters.join('');
+    }
+
+    // Extremely defensive fallback: move a non-zero digit to the front.
+    const nonZeroIndex = characters.findIndex((character) => character !== '0');
+    if (nonZeroIndex > 0) {
+      const temp = characters[0];
+      characters[0] = characters[nonZeroIndex];
+      characters[nonZeroIndex] = temp;
+    }
+    return characters.join('');
+  }
+
+  function generateSecret(rawConfig) {
+    const config = normalizeConfig(rawConfig);
+    const pool = getDigitPool(config);
+    if (config.repeatMode === 'none') return generateNoRepeat(config, pool);
+    if (config.repeatMode === 'exact') return generateExactRepeat(config, pool);
+    return generateAnyRepeat(config, pool);
+  }
+
+  function getFeedback(secret, guess) {
+    const secretText = String(secret);
+    const guessText = String(guess);
+    const secretCounts = new Array(10).fill(0);
+    const guessCounts = new Array(10).fill(0);
+    let positions = 0;
+
+    const size = Math.min(secretText.length, guessText.length);
+    for (let i = 0; i < size; i += 1) {
+      const secretDigit = secretText.charCodeAt(i) - 48;
+      const guessDigit = guessText.charCodeAt(i) - 48;
+      if (secretDigit >= 0 && secretDigit <= 9) secretCounts[secretDigit] += 1;
+      if (guessDigit >= 0 && guessDigit <= 9) guessCounts[guessDigit] += 1;
+      if (secretDigit === guessDigit) positions += 1;
+    }
+
+    let digits = 0;
+    for (let digit = 0; digit <= 9; digit += 1) {
+      digits += Math.min(secretCounts[digit], guessCounts[digit]);
+    }
+
+    return { digits, positions };
+  }
+
+  function validateGuess(rawGuess, rawConfig) {
+    const config = normalizeConfig(rawConfig);
+    const guess = rawGuess == null ? '' : String(rawGuess).trim();
+    const n = config.length;
+
+    if (!/^\d+$/.test(guess) || guess.length !== n) {
+      return {
+        ok: false,
+        code: 'length',
+        message: `请填满 ${n} 位数字。`,
+        focusIndex: clamp(guess.length, 0, n - 1),
+      };
+    }
+
+    if (guess[0] === '0') {
+      return {
+        ok: false,
+        code: 'leading-zero',
+        message: '首位不能为 0。',
+        focusIndex: 0,
+      };
+    }
+
+    const poolSize = getDigitPoolSize(config);
+    const outOfRangeIndex = Array.from(guess).findIndex((character) => Number(character) >= poolSize);
+    if (outOfRangeIndex !== -1) {
+      return {
+        ok: false,
+        code: 'range',
+        message: `本局数字范围为 0–${poolSize - 1}，请使用范围内的数字。`,
+        focusIndex: outOfRangeIndex,
+      };
+    }
+
+    const repeatedSlots = countRepeatedSlots(guess);
+    if (config.repeatMode === 'none' && repeatedSlots > 0) {
+      return {
+        ok: false,
+        code: 'duplicate',
+        message: `本局不允许重复数字，请让 ${n} 位互不相同。`,
+        focusIndex: -1,
+      };
+    }
+
+    if (config.repeatMode === 'exact' && repeatedSlots !== config.exactRepeat) {
+      return {
+        ok: false,
+        code: 'repeat-slots',
+        message: `本局要求 ${config.exactRepeat} 个重复席位，当前为 ${repeatedSlots} 个。`,
+        focusIndex: -1,
+      };
+    }
+
+    return { ok: true, guess, repeatedSlots };
+  }
+
+  function isConsistentWithPast(round, pastRounds) {
+    return pastRounds.every((past) => {
+      const hypothetical = getFeedback(past.guess, round.guess);
+      return (
+        hypothetical.digits === past.feedback.digits &&
+        hypothetical.positions === past.feedback.positions
+      );
+    });
+  }
+
+  function gradeFor(score) {
+    return GRADES.find((grade) => score >= grade.min) || GRADES[GRADES.length - 1];
+  }
+
+  function scoreGame({ config: rawConfig, history }) {
+    const config = normalizeConfig(rawConfig);
+    const rounds = Array.isArray(history) ? history : [];
+    const attempts = rounds.length;
+    if (attempts === 0) return null;
+
+    const estimate = estimateGame(config);
+    const efficiencyRatio = Math.pow(Math.min(1, estimate.target / attempts), 1.5);
+    let consistentCount = 0;
+
+    rounds.forEach((round, index) => {
+      if (index === 0 || isConsistentWithPast(round, rounds.slice(0, index))) {
+        consistentCount += 1;
+      }
+    });
+
+    const consistencyRatio = consistentCount / attempts;
+    const uniqueFeedback = new Set(
+      rounds.map((round) => `${round.feedback.digits}-${round.feedback.positions}`),
+    ).size;
+    const informationRatio = uniqueFeedback / attempts;
+    const uniqueGuesses = new Set(rounds.map((round) => round.guess)).size;
+
+    const efficiency = Math.round(65 * efficiencyRatio);
+    const consistency = Math.round(20 * consistencyRatio);
+    const information = Math.round(15 * informationRatio);
+    const score = clamp(efficiency + consistency + information, 0, 100);
+    const grade = gradeFor(score);
+
+    return {
+      score,
+      grade,
+      attempts,
+      target: estimate.target,
+      candidateCount: estimate.candidateCount,
+      informationFloor: estimate.informationFloor,
+      efficiency,
+      consistency,
+      information,
+      efficiencyRatio,
+      consistencyRatio,
+      informationRatio,
+      consistentCount,
+      uniqueFeedback,
+      uniqueGuesses,
+      repeatedGuesses: attempts - uniqueGuesses,
+    };
+  }
+
+  const api = Object.freeze({
+    MIN_LENGTH,
+    MAX_LENGTH,
+    DIFFICULTIES,
+    REPEAT_MODES,
+    GRADES,
+    normalizeConfig,
+    getDifficulty,
+    getDigitPool,
+    getDigitPoolSize,
+    integerPartitions,
+    countRepeatedSlots,
+    countCandidates,
+    estimateGame,
+    generateSecret,
+    getFeedback,
+    validateGuess,
+    scoreGame,
+  });
+
+  return api;
+})();
+
+if (typeof window !== 'undefined') window.DSGame = DSGame;
+if (typeof module !== 'undefined' && module.exports) module.exports = DSGame;
+
+</script>
+  <script>
+/* 数隐 NUMEN — interface and game flow */
+(() => {
+  'use strict';
+
+  const Game = window.DSGame;
+  if (!Game) {
+    throw new Error('DSGame 未能加载。');
+  }
+
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const numberFormat = new Intl.NumberFormat('zh-CN');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const state = {
+    config: null,
+    secret: null,
+    history: [],
+    over: false,
+    result: null,
+    slots: [],
+  };
+
+  let resultTimer = 0;
+  let suppressResultFocus = false;
+
+  const els = {
+    setupView: $('#setupView'),
+    gameView: $('#gameView'),
+    setupForm: $('#setupForm'),
+    previewDigits: $('#previewDigits'),
+    exactRepeatPanel: $('#exactRepeatPanel'),
+    exactRepeatOptions: $('#exactRepeatOptions'),
+    setupCandidateCount: $('#setupCandidateCount'),
+    setupChips: $('#setupChips'),
+    gameConfigText: $('#gameConfigText'),
+    gameSpaceText: $('#gameSpaceText'),
+    caseStatus: $('#caseStatus'),
+    roundNumber: $('#roundNumber'),
+    guessActive: $('#guessActive'),
+    guessHeading: $('#guessHeading'),
+    guessHelp: $('#guessHelp'),
+    constraintChips: $('#constraintChips'),
+    guessForm: $('#guessForm'),
+    slotRow: $('#slotRow'),
+    clearGuess: $('#clearGuess'),
+    guessError: $('#guessError'),
+    submitGuess: $('#submitGuess'),
+    latestFeedback: $('#latestFeedback'),
+    historyList: $('#historyList'),
+    historyCount: $('#historyCount'),
+    gameFinished: $('#gameFinished'),
+    finishAttempts: $('#finishAttempts'),
+    finishSecret: $('#finishSecret'),
+    finishScore: $('#finishScore'),
+    finishGrade: $('#finishGrade'),
+    openResult: $('#openResult'),
+    changeSetupInline: $('#changeSetupInline'),
+    backToSetup: $('#backToSetup'),
+    rulesDialog: $('#rulesDialog'),
+    resultDialog: $('#resultDialog'),
+    resultAttemptsInline: $('#resultAttemptsInline'),
+    resultAttempts: $('#resultAttempts'),
+    resultTarget: $('#resultTarget'),
+    resultSpace: $('#resultSpace'),
+    resultSecret: $('#resultSecret'),
+    resultScore: $('#resultScore'),
+    scoreRing: $('#scoreRing'),
+    resultGrade: $('#resultGrade'),
+    resultGradeLabel: $('#resultGradeLabel'),
+    resultGradeStamp: $('#resultGradeStamp'),
+    resultTags: $('#resultTags'),
+    resultComment: $('#resultComment'),
+    effScore: $('#effScore'),
+    consistencyScore: $('#consistencyScore'),
+    informationScore: $('#informationScore'),
+    effBar: $('#effBar'),
+    consistencyBar: $('#consistencyBar'),
+    informationBar: $('#informationBar'),
+    liveRegion: $('#liveRegion'),
+  };
+
+  // ---------------------------------------------------------------------------
+  // Setup
+  // ---------------------------------------------------------------------------
+
+  function readRawConfig() {
+    const checkedExact = $('input[name="exactRepeat"]:checked');
+    return {
+      length: Number($('input[name="length"]:checked').value),
+      repeatMode: $('input[name="repeatMode"]:checked').value,
+      difficulty: $('input[name="difficulty"]:checked').value,
+      exactRepeat: checkedExact ? Number(checkedExact.value) : 2,
+    };
+  }
+
+  function buildExactOptions(length, preferred) {
+    const selected = Math.min(Math.max(Number(preferred) || 2, 2), length);
+    const fragment = document.createDocumentFragment();
+
+    for (let slots = 2; slots <= length; slots += 1) {
+      const label = document.createElement('label');
+      label.className = 'exact-option';
+
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'exactRepeat';
+      input.value = String(slots);
+      input.checked = slots === selected;
+
+      const visual = document.createElement('span');
+      visual.textContent = String(slots);
+      const suffix = document.createElement('small');
+      suffix.textContent = '席';
+      visual.append(suffix);
+
+      label.append(input, visual);
+      fragment.append(label);
+    }
+
+    els.exactRepeatOptions.replaceChildren(fragment);
+  }
+
+  function syncExactOptions(length) {
+    const current = $('input[name="exactRepeat"]:checked');
+    const count = $$('input[name="exactRepeat"]', els.exactRepeatOptions).length;
+    const selectedValue = current ? Number(current.value) : 2;
+    if (count !== length - 1 || selectedValue > length) {
+      buildExactOptions(length, Math.min(selectedValue, length));
+    }
+  }
+
+  function renderPreview(length) {
+    els.previewDigits.style.setProperty('--preview-length', String(length));
+    const fragment = document.createDocumentFragment();
+    for (let index = 0; index < length; index += 1) {
+      const digit = document.createElement('span');
+      digit.className = 'preview-digit';
+      digit.style.setProperty('--i', String(index));
+      digit.textContent = '?';
+      fragment.append(digit);
+    }
+    els.previewDigits.replaceChildren(fragment);
+  }
+
+  function repeatDescription(config) {
+    if (config.repeatMode === 'exact') return `重复 ${config.exactRepeat} 席`;
+    return Game.REPEAT_MODES[config.repeatMode].short;
+  }
+
+  function refreshSetup() {
+    const raw = readRawConfig();
+    const config = Game.normalizeConfig(raw);
+    syncExactOptions(config.length);
+    els.exactRepeatPanel.hidden = config.repeatMode !== 'exact';
+    renderPreview(config.length);
+
+    const difficulty = Game.getDifficulty(config);
+    const candidateCount = Game.countCandidates(config);
+    els.setupCandidateCount.textContent = numberFormat.format(candidateCount);
+
+    const chips = [
+      `${config.length} 位`,
+      repeatDescription(config),
+      `数字 ${difficulty.range}`,
+      difficulty.name,
+    ];
+    els.setupChips.replaceChildren(
+      ...chips.map((chip) => {
+        const element = document.createElement('span');
+        element.className = 'summary-chip';
+        element.textContent = chip;
+        return element;
+      }),
+    );
+  }
+
+  function initSetup() {
+    buildExactOptions(4, 2);
+    refreshSetup();
+
+    els.setupForm.addEventListener('change', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement)) return;
+      if (target.name === 'length') {
+        syncExactOptions(Number(target.value));
+      }
+      refreshSetup();
+    });
+
+    els.setupForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const config = Game.normalizeConfig(readRawConfig());
+      startGame(config);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Dialogs
+  // ---------------------------------------------------------------------------
+
+  function openRules() {
+    if (!els.rulesDialog.open) els.rulesDialog.showModal();
+  }
+
+  function closeRules() {
+    if (els.rulesDialog.open) els.rulesDialog.close();
+  }
+
+  function showResultDialog() {
+    if (!state.over || !state.result || els.resultDialog.open) return;
+    populateResult(state.result);
+    if (typeof els.resultDialog.showModal === 'function') {
+      els.resultDialog.showModal();
+    } else {
+      els.resultDialog.setAttribute('open', '');
+    }
+  }
+
+  function closeResultDialog({ suppressFocus = false } = {}) {
+    if (!els.resultDialog.open) return;
+    suppressResultFocus = suppressFocus;
+    els.resultDialog.close();
+  }
+
+  function scrollToHistory() {
+    const panel = els.historyList.closest('.history-panel');
+    if (!panel) return;
+    const rect = panel.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) return;
+    panel.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
+
+  function initDialogs() {
+    $$('[data-open-rules]').forEach((button) => button.addEventListener('click', openRules));
+    $$('[data-close-rules]').forEach((button) => button.addEventListener('click', closeRules));
+    els.rulesDialog.addEventListener('click', (event) => {
+      if (event.target === els.rulesDialog) closeRules();
+    });
+
+    $('#closeResult').addEventListener('click', () => closeResultDialog());
+    $('#viewHistoryBtn').addEventListener('click', () => {
+      closeResultDialog();
+      window.setTimeout(scrollToHistory, 160);
+    });
+    els.resultDialog.addEventListener('click', (event) => {
+      if (event.target === els.resultDialog) closeResultDialog();
+    });
+    els.resultDialog.addEventListener('close', () => {
+      if (!suppressResultFocus && state.over && !els.gameView.hidden) {
+        els.openResult.focus({ preventScroll: true });
+      }
+      suppressResultFocus = false;
+    });
+
+    $('#playAgainBtn').addEventListener('click', () => {
+      const config = state.config;
+      closeResultDialog({ suppressFocus: true });
+      startGame(config);
+    });
+
+    $('#changeSetupBtn').addEventListener('click', () => {
+      closeResultDialog({ suppressFocus: true });
+      returnToSetup();
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Game start / reset
+  // ---------------------------------------------------------------------------
+
+  function startGame(rawConfig) {
+    window.clearTimeout(resultTimer);
+    closeResultDialog({ suppressFocus: true });
+
+    const config = Game.normalizeConfig(rawConfig);
+    state.config = config;
+    state.secret = Game.generateSecret(config);
+    state.history = [];
+    state.over = false;
+    state.result = null;
+
+    const difficulty = Game.getDifficulty(config);
+    const estimate = Game.estimateGame(config);
+
+    els.setupView.hidden = true;
+    els.gameView.hidden = false;
+    document.title = `本局进行中 · 数隐 NUMEN`;
+    els.caseStatus.textContent = 'CASE ACTIVE / 本局进行中';
+    els.gameConfigText.textContent = `${config.length} 位 · ${repeatDescription(config)} · ${difficulty.name}`;
+    els.gameSpaceText.textContent = `${numberFormat.format(estimate.candidateCount)} 种`;
+    els.guessHelp.textContent = `输入一个 ${config.length} 位数字。每位可来自 ${difficulty.range}，首位不能为 0。`;
+
+    const constraints = [
+      `${config.length} 位`,
+      '首位 ≠ 0',
+      `数字 ${difficulty.range}`,
+    ];
+    if (config.repeatMode === 'none') {
+      constraints.push('各位数字互不相同');
+    } else if (config.repeatMode === 'exact') {
+      constraints.push(`重复席位 ${config.exactRepeat}`);
+    } else {
+      constraints.push('允许重复');
+    }
+    els.constraintChips.replaceChildren(
+      ...constraints.map((text) => {
+        const chip = document.createElement('span');
+        chip.className = 'constraint-chip';
+        chip.textContent = text;
+        return chip;
+      }),
+    );
+
+    buildSlots(config.length);
+    resetHistory();
+    resetGuessForm();
+    els.guessActive.hidden = false;
+    els.gameFinished.hidden = true;
+    els.latestFeedback.hidden = true;
+    els.latestFeedback.replaceChildren();
+    els.submitGuess.disabled = false;
+    els.clearGuess.disabled = false;
+    updateRoundCounter();
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+
+    requestAnimationFrame(() => {
+      focusSlot(0);
+    });
+  }
+
+  function buildSlots(length) {
+    const fragment = document.createDocumentFragment();
+    state.slots = [];
+    els.slotRow.style.setProperty('--digits', String(length));
+    els.slotRow.classList.remove('is-invalid');
+    els.slotRow.setAttribute('role', 'group');
+    els.slotRow.setAttribute('aria-label', `输入 ${length} 位猜测数字`);
+
+    for (let index = 0; index < length; index += 1) {
+      const input = document.createElement('input');
+      input.className = 'slot';
+      input.type = 'text';
+      input.inputMode = 'numeric';
+      input.autocomplete = 'off';
+      input.spellcheck = false;
+      input.maxLength = 1;
+      input.placeholder = '?';
+      input.dataset.index = String(index);
+      input.setAttribute('aria-label', `第 ${index + 1} 位数字`);
+      input.setAttribute('aria-invalid', 'false');
+      input.setAttribute('enterkeyhint', index === length - 1 ? 'done' : 'next');
+      fragment.append(input);
+      state.slots.push(input);
+    }
+
+    els.slotRow.replaceChildren(fragment);
+  }
+
+  function resetGuessForm() {
+    els.guessForm.reset();
+    clearValidationError();
+    state.slots.forEach((slot) => {
+      slot.value = '';
+    });
+    focusSlot(0);
+  }
+
+  function focusSlot(index) {
+    const slot = state.slots[index];
+    if (!slot) return;
+    slot.focus({ preventScroll: true });
+    slot.select();
+  }
+
+  function updateRoundCounter() {
+    els.roundNumber.textContent = String(state.history.length + 1).padStart(2, '0');
+  }
+
+  function resetHistory() {
+    els.historyCount.textContent = '00';
+    els.historyList.replaceChildren(createHistoryEmpty());
+  }
+
+  function createHistoryEmpty() {
+    const empty = document.createElement('div');
+    empty.className = 'history-empty';
+    empty.innerHTML = `
+      <div class="empty-target" aria-hidden="true"><span>?</span></div>
+      <p>还没有提交过猜测</p>
+      <span>第一条线索会出现在这里。</span>
+    `;
+    return empty;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Guess input
+  // ---------------------------------------------------------------------------
+
+  function collectGuess() {
+    return state.slots.map((slot) => slot.value || '').join('');
+  }
+
+  function markSlotFilled(slot) {
+    slot.classList.toggle('is-filled', Boolean(slot.value));
+  }
+
+  function focusNextEmpty(fromIndex) {
+    for (let index = fromIndex + 1; index < state.slots.length; index += 1) {
+      if (!state.slots[index].value) {
+        focusSlot(index);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function fillFromString(startIndex, digits) {
+    const clean = digits.replace(/\D/g, '');
+    if (!clean) return;
+    const limit = Math.min(clean.length, state.slots.length - startIndex);
+    for (let offset = 0; offset < limit; offset += 1) {
+      const slot = state.slots[startIndex + offset];
+      slot.value = clean[offset];
+      markSlotFilled(slot);
+    }
+    clearValidationError();
+    const nextIndex = startIndex + limit;
+    if (nextIndex < state.slots.length) {
+      focusSlot(nextIndex);
+    } else {
+      focusSlot(state.slots.length - 1);
+    }
+  }
+
+  function handleSlotInput(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !target.classList.contains('slot')) return;
+    const index = Number(target.dataset.index);
+    const digits = target.value.replace(/\D/g, '');
+
+    if (!digits) {
+      target.value = '';
+      markSlotFilled(target);
+      clearValidationError();
+      return;
+    }
+
+    if (digits.length > 1) {
+      fillFromString(index, digits);
+      return;
+    }
+
+    target.value = digits;
+    markSlotFilled(target);
+    clearValidationError();
+    focusNextEmpty(index);
+  }
+
+  function handleSlotKeydown(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !target.classList.contains('slot')) return;
+    const index = Number(target.dataset.index);
+
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      submitGuess();
+      return;
+    }
+
+    if (event.key === 'Backspace' && !target.value && index > 0) {
+      event.preventDefault();
+      const previous = state.slots[index - 1];
+      previous.value = '';
+      markSlotFilled(previous);
+      clearValidationError();
+      focusSlot(index - 1);
+      return;
+    }
+
+    if (event.key === 'ArrowLeft' && index > 0) {
+      event.preventDefault();
+      focusSlot(index - 1);
+      return;
+    }
+
+    if (event.key === 'ArrowRight' && index < state.slots.length - 1) {
+      event.preventDefault();
+      focusSlot(index + 1);
+      return;
+    }
+
+    if (event.key === 'Home') {
+      event.preventDefault();
+      focusSlot(0);
+      return;
+    }
+
+    if (event.key === 'End') {
+      event.preventDefault();
+      focusSlot(state.slots.length - 1);
+      return;
+    }
+
+    if (
+      event.key.length === 1
+      && !/[0-9]/.test(event.key)
+      && !event.metaKey
+      && !event.ctrlKey
+      && !event.altKey
+    ) {
+      event.preventDefault();
+    }
+  }
+
+  function handleSlotPaste(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !target.classList.contains('slot')) return;
+    const text = event.clipboardData ? event.clipboardData.getData('text') : '';
+    if (!text) return;
+    event.preventDefault();
+    fillFromString(Number(target.dataset.index), text);
+  }
+
+  function handleSlotFocus(event) {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.classList.contains('slot')) {
+      target.select();
+    }
+  }
+
+  function initGuessInput() {
+    els.slotRow.addEventListener('input', handleSlotInput);
+    els.slotRow.addEventListener('keydown', handleSlotKeydown);
+    els.slotRow.addEventListener('paste', handleSlotPaste);
+    els.slotRow.addEventListener('focusin', handleSlotFocus);
+
+    els.clearGuess.addEventListener('click', () => {
+      if (state.over) return;
+      state.slots.forEach((slot) => {
+        slot.value = '';
+        markSlotFilled(slot);
+      });
+      clearValidationError();
+      focusSlot(0);
+    });
+
+    els.guessForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitGuess();
+    });
+  }
+
+  function clearValidationError() {
+    els.guessError.hidden = true;
+    els.guessError.textContent = '';
+    els.slotRow.classList.remove('is-invalid');
+    state.slots.forEach((slot) => slot.setAttribute('aria-invalid', 'false'));
+  }
+
+  function showValidationError(message, focusIndex) {
+    els.guessError.textContent = message;
+    els.guessError.hidden = false;
+    els.slotRow.classList.add('is-invalid');
+    state.slots.forEach((slot) => slot.setAttribute('aria-invalid', 'true'));
+    if (Number.isInteger(focusIndex) && focusIndex >= 0) {
+      focusSlot(focusIndex);
+    }
+    els.liveRegion.textContent = message;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Submitting guesses
+  // ---------------------------------------------------------------------------
+
+  function submitGuess() {
+    if (state.over || !state.config) return;
+    const guess = collectGuess();
+
+    if (guess.length < state.config.length) {
+      const emptyIndex = state.slots.findIndex((slot) => !slot.value);
+      showValidationError(`请填满 ${state.config.length} 位数字。`, emptyIndex === -1 ? 0 : emptyIndex);
+      return;
+    }
+
+    const validation = Game.validateGuess(guess, state.config);
+    if (!validation.ok) {
+      showValidationError(validation.message, validation.focusIndex);
+      return;
+    }
+
+    const feedback = Game.getFeedback(state.secret, validation.guess);
+    const round = {
+      number: state.history.length + 1,
+      guess: validation.guess,
+      feedback,
+    };
+    state.history.push(round);
+    clearValidationError();
+    appendHistoryRow(round, feedback.positions === state.config.length);
+
+    const isWin = feedback.positions === state.config.length;
+    if (isWin) {
+      els.latestFeedback.hidden = true;
+      els.liveRegion.textContent = `破译成功，你用了 ${state.history.length} 次猜测。`;
+      finishGame();
+      return;
+    }
+
+    updateRoundCounter();
+    showLatestFeedback(round);
+    els.liveRegion.textContent = `第 ${round.number} 次猜测：数字命中 ${feedback.digits} 个，位置命中 ${feedback.positions} 个。`;
+    window.clearTimeout(resultTimer);
+    state.slots.forEach((slot) => {
+      slot.value = '';
+      markSlotFilled(slot);
+    });
+    clearValidationError();
+    requestAnimationFrame(() => focusSlot(0));
+  }
+
+  function showLatestFeedback(round) {
+    const { digits, positions } = round.feedback;
+    let copy;
+    if (digits === 0) {
+      copy = '这一猜没有数字命中。换一组数字，或重新考虑候选范围。';
+    } else if (positions === digits) {
+      copy = '命中的数字全部位于正确位置，可以优先锁定它们。';
+    } else if (positions === 0) {
+      copy = '有正确数字，但都不在当前位置；下一步先尝试换位。';
+    } else {
+      copy = '已有数字和位置同时命中，继续缩小未锁定数字的范围。';
+    }
+
+    els.latestFeedback.innerHTML = `
+      <div class="latest-topline">
+        <strong>第 ${String(round.number).padStart(2, '0')} 次猜测已归档</strong>
+        <span>CLUE RECORDED</span>
+      </div>
+      <div class="latest-hints">
+        <span class="latest-hint latest-hint-digits">数字命中 <strong>${digits}</strong></span>
+        <span class="latest-hint latest-hint-positions">位置命中 <strong>${positions}</strong></span>
+      </div>
+      <p class="latest-copy">${copy} 线索已同步到「猜测与线索」。</p>
+    `;
+    els.latestFeedback.hidden = false;
+  }
+
+  // ---------------------------------------------------------------------------
+  // History
+  // ---------------------------------------------------------------------------
+
+  function appendHistoryRow(round, isWin) {
+    const empty = $('.history-empty', els.historyList);
+    if (empty) empty.remove();
+
+    const priorLatest = $('.history-row.is-latest', els.historyList);
+    if (priorLatest) priorLatest.classList.remove('is-latest');
+
+    const row = document.createElement('article');
+    row.className = `history-row is-latest${isWin ? ' is-win' : ''}`;
+    row.setAttribute(
+      'aria-label',
+      `第 ${round.number} 次猜测 ${round.guess.split('').join(' ')}，数字命中 ${round.feedback.digits}，位置命中 ${round.feedback.positions}`,
+    );
+
+    const digitsMarkup = round.guess
+      .split('')
+      .map((digit) => `<span class="guess-chip">${digit}</span>`)
+      .join('');
+
+    row.innerHTML = `
+      <div class="history-turn">
+        <span>NO.</span>
+        <strong>${String(round.number).padStart(2, '0')}</strong>
+      </div>
+      <div class="history-content">
+        <div class="history-guess">
+          <span class="cell-label">你的猜测</span>
+          <div class="guess-number">${digitsMarkup}</div>
+        </div>
+        <div class="history-hints">
+          <div class="hint-block hint-digits">
+            <span class="hint-label">数字命中</span>
+            <strong class="hint-value">${round.feedback.digits}</strong>
+          </div>
+          <div class="hint-block hint-positions">
+            <span class="hint-label">位置命中</span>
+            <strong class="hint-value">${round.feedback.positions}</strong>
+          </div>
+        </div>
+      </div>
+      ${isWin ? '<span class="history-win-tag">全部命中</span>' : ''}
+    `;
+
+    els.historyList.insertBefore(row, els.historyList.firstChild);
+    els.historyList.scrollTop = 0;
+    els.historyCount.textContent = String(state.history.length).padStart(2, '0');
+  }
+
+  // ---------------------------------------------------------------------------
+  // Finish and result
+  // ---------------------------------------------------------------------------
+
+  function finishGame() {
+    state.over = true;
+    state.result = Game.scoreGame({ config: state.config, history: state.history });
+    els.caseStatus.textContent = 'CASE CLOSED / 暗数已破译';
+    document.title = '破译完成 · 数隐 NUMEN';
+
+    els.finishAttempts.textContent = String(state.result.attempts);
+    els.finishSecret.replaceChildren(
+      ...state.secret.split('').map((digit) => {
+        const cell = document.createElement('span');
+        cell.textContent = digit;
+        return cell;
+      }),
+    );
+    els.finishScore.textContent = String(state.result.score);
+    els.finishGrade.textContent = state.result.grade.letter;
+
+    els.guessActive.hidden = true;
+    els.gameFinished.hidden = false;
+    els.latestFeedback.hidden = true;
+    els.liveRegion.textContent = `破译成功，你用了 ${state.result.attempts} 次猜测，逻辑评分 ${state.result.score} 分。`;
+
+    window.clearTimeout(resultTimer);
+    resultTimer = window.setTimeout(() => {
+      if (state.over) showResultDialog();
+    }, prefersReducedMotion ? 120 : 750);
+  }
+
+  function repeatSummary(config) {
+    if (config.repeatMode === 'exact') return `重复 ${config.exactRepeat} 席`;
+    return Game.REPEAT_MODES[config.repeatMode].short;
+  }
+
+  function populateResult(result) {
+    els.resultAttemptsInline.textContent = String(result.attempts);
+    els.resultAttempts.textContent = String(result.attempts);
+    els.resultTarget.textContent = String(result.target);
+    els.resultSpace.textContent = numberFormat.format(result.candidateCount);
+
+    els.resultSecret.replaceChildren(
+      ...state.secret.split('').map((digit, index) => {
+        const cell = document.createElement('span');
+        cell.style.setProperty('--i', String(index));
+        cell.textContent = digit;
+        return cell;
+      }),
+    );
+
+    els.resultScore.textContent = String(result.score);
+    els.effScore.textContent = `${result.efficiency} / 65`;
+    els.consistencyScore.textContent = `${result.consistency} / 20`;
+    els.informationScore.textContent = `${result.information} / 15`;
+
+    els.effBar.style.width = '0%';
+    els.consistencyBar.style.width = '0%';
+    els.informationBar.style.width = '0%';
+    requestAnimationFrame(() => {
+      els.effBar.style.width = `${(result.efficiency / 65) * 100}%`;
+      els.consistencyBar.style.width = `${(result.consistency / 20) * 100}%`;
+      els.informationBar.style.width = `${(result.information / 15) * 100}%`;
+    });
+
+    els.resultGrade.textContent = result.grade.letter;
+    els.resultGradeLabel.textContent = result.grade.title;
+    els.resultGradeStamp.textContent = `GRADE ${result.grade.letter}`;
+    els.resultComment.textContent = buildResultComment(result);
+
+    const tags = [
+      `${Game.getDifficulty(state.config).name}难度`,
+      `${state.config.length} 位 · ${repeatSummary(state.config)}`,
+      `一致性 ${Math.round(result.consistencyRatio * 100)}%`,
+      `${result.uniqueFeedback}/${result.attempts} 种反馈`,
+    ];
+    els.resultTags.replaceChildren(
+      ...tags.map((text) => {
+        const tag = document.createElement('span');
+        tag.className = 'result-tag';
+        tag.textContent = text;
+        return tag;
+      }),
+    );
+
+    animateScore(result.score);
+  }
+
+  function buildResultComment(result) {
+    const sentences = [];
+    if (result.attempts <= result.target) {
+      sentences.push(`你在参考步数（${result.target} 次）内完成破译，推理节奏很干净。`);
+    } else if (result.attempts <= Math.ceil(result.target * 1.4)) {
+      sentences.push(`你用了 ${result.attempts} 次破译，比参考步数多 ${result.attempts - result.target} 次，整体仍在可控范围内。`);
+    } else {
+      sentences.push(`你用了 ${result.attempts} 次破译，超过参考步数 ${result.attempts - result.target} 次；先集中排除不成立的组合会更高效。`);
+    }
+
+    if (result.consistencyRatio === 1) {
+      sentences.push('所有猜测都与之前的线索相容，没有在已被排除的方向上浪费轮次。');
+    } else {
+      const inconsistent = result.attempts - result.consistentCount;
+      sentences.push(`其中 ${inconsistent} 次猜测与已有线索矛盾，说明那一轮没有完全利用之前的反馈。`);
+    }
+
+    if (result.attempts > 1 && result.informationRatio === 1) {
+      sentences.push('每一次试探都带来了不同线索，信息利用率满分。');
+    } else if (result.informationRatio < 0.6) {
+      sentences.push('部分轮次重复得到相同线索，可以尝试更有区分度的数字组合。');
+    }
+
+    return sentences.join(' ');
+  }
+
+  function animateScore(score) {
+    window.cancelAnimationFrame(animateScore.frameId);
+    const duration = prefersReducedMotion ? 0 : 900;
+    const start = performance.now();
+
+    function frame(now) {
+      const progress = duration === 0 ? 1 : Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const shown = Math.round(score * eased);
+      els.resultScore.textContent = String(shown);
+      els.scoreRing.style.setProperty('--score-angle', `${eased * score * 3.6}deg`);
+      if (progress < 1) {
+        animateScore.frameId = window.requestAnimationFrame(frame);
+      } else {
+        els.resultScore.textContent = String(score);
+        els.scoreRing.style.setProperty('--score-angle', `${score * 3.6}deg`);
+      }
+    }
+
+    animateScore.frameId = window.requestAnimationFrame(frame);
+  }
+
+  function returnToSetup() {
+    window.clearTimeout(resultTimer);
+    closeResultDialog({ suppressFocus: true });
+    state.config = null;
+    state.secret = null;
+    state.history = [];
+    state.over = false;
+    state.result = null;
+    state.slots = [];
+    document.title = '数隐 NUMEN · 逻辑猜数实验室';
+    els.gameView.hidden = true;
+    els.setupView.hidden = false;
+    els.caseStatus.textContent = 'CASE ACTIVE / 本局进行中';
+    refreshSetup();
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    requestAnimationFrame(() => {
+      const checked = $('input[name="length"]:checked');
+      if (checked) checked.focus({ preventScroll: true });
+    });
+  }
+
+  function requestReturnToSetup() {
+    if (!state.over && state.history.length > 0) {
+      const confirmed = window.confirm('返回设定会放弃本局进度，确定吗？');
+      if (!confirmed) return;
+    }
+    returnToSetup();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Wire game buttons
+  // ---------------------------------------------------------------------------
+
+  function initGameControls() {
+    initGuessInput();
+    els.backToSetup.addEventListener('click', requestReturnToSetup);
+    els.openResult.addEventListener('click', showResultDialog);
+    els.changeSetupInline.addEventListener('click', returnToSetup);
+    const playAgainInline = $('#playAgainInline');
+    if (playAgainInline) {
+      playAgainInline.addEventListener('click', () => startGame(state.config));
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Boot
+  // ---------------------------------------------------------------------------
+
+  initSetup();
+  initDialogs();
+  initGameControls();
+})();
+
+</script>
+</body>
+</html>
